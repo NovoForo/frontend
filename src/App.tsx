@@ -23,7 +23,7 @@ const NAVIGATION: Navigation = [
 ];
 
 const BRANDING = {
-  title: 'My Toolpad Core App',
+  title: 'NovoForo',
 };
 
 export default function App() {

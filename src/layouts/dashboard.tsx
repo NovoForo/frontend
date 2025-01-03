@@ -9,10 +9,13 @@ export default function Layout() {
   const location = useLocation();
 
   if (!session) {
-    // Add the `callbackUrl` search parameter
-    const redirectTo = `/sign-in?callbackUrl=${encodeURIComponent(location.pathname)}`;
+    const skippedUrls = ['/']
+    if (!skippedUrls.includes(location.pathname)) {
+      // Add the `callbackUrl` search parameter
+      const redirectTo = `/sign-in?callbackUrl=${encodeURIComponent(location.pathname)}`;
 
-    return <Navigate to={redirectTo} replace />;
+      return <Navigate to={redirectTo} replace />;
+    }
   }
 
   return (
