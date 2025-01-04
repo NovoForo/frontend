@@ -8,6 +8,7 @@ import OrdersPage from './pages/orders';
 import SignInPage from './pages/signIn';
 import RulesPage from "./pages/rules";
 import ForumsPage from "./pages/forumsPage";
+import CategoryForumPage from './pages/CategoryForumPage';
 
 const router = createBrowserRouter([
   {
@@ -26,11 +27,15 @@ const router = createBrowserRouter([
             Component: ForumsPage,
           },
           {
+            path: '/category/:categoryId/forums/:forumId',
+            Component: CategoryForumPage,
+          },
+          {
             path: '/rules',
             Component: RulesPage,
           },
           {
-            path: 'manageaccount',
+            path: '/manageaccount',
             Component: OrdersPage,
           },
           {

@@ -30,10 +30,10 @@ export default function ForumsPage() {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {row["Forums"].map((row) => (
-                                <TableRow key={row["Id"]}>
+                                {row["Forums"].map((sub_row) => (
+                                <TableRow key={sub_row["Id"]}>
                                     <TableCell component="th" scope="row">
-                                        <Link to={`/forums/${row["Id"]}`}>{row.Name}</Link>
+                                        <Link to={`/category/${row["Id"]}/forums/${sub_row["Id"]}`}>{row.Name}</Link>
                                     </TableCell>
                                     <TableCell>
                                         {row.Description}

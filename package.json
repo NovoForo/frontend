@@ -13,6 +13,7 @@
     "@mui/icons-material": "^6",
     "@mui/material": "^6",
     "@toolpad/core": "latest",
+    "path-to-regexp": "^8.2.0",
     "react": "^18",
     "react-dom": "^18",
     "react-router-dom": "^6"
