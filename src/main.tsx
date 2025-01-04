@@ -10,6 +10,7 @@ import RulesPage from "./pages/rules";
 import ForumsPage from "./pages/forumsPage";
 import CategoryForumPage from './pages/CategoryForumPage';
 import TopicPage from './pages/TopicPage';
+import NewTopicsPage from './pages/NewTopicPage';
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
           {
             path: '/category/:categoryId/forums/:forumId/topics/:topicId',
             Component: TopicPage,
+          },
+          {
+            path: '/category/:categoryId/forums/:forumId/topics/new',
+            Component: NewTopicsPage,
           },
           {
             path: '/rules',

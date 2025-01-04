@@ -5,9 +5,11 @@ import GavelIcon from '@mui/icons-material/Gavel';
 import { AppProvider } from '@toolpad/core/react-router-dom';
 import { Outlet, useNavigate } from 'react-router-dom';
 import type { Navigation, Session } from '@toolpad/core';
-import { SessionContext } from './SessionContext';
+import { SessionContext, useSession } from './SessionContext';
 import {ManageAccounts} from "@mui/icons-material";
 import { Typography } from '@mui/material';
+
+import { ExtendedSession } from './pages/signIn';
 
 const NAVIGATION: Navigation = [
   {
@@ -50,6 +52,36 @@ export default function App() {
       title: "Manage Account",
       icon: <ManageAccounts />,
       segment: "manageaccount",
+    };
+
+    // Check if the item already exists in NAVIGATION
+    const exists = NAVIGATION.some(item => item.segment === newItem.segment);
+
+    if (!exists) {
+      NAVIGATION.push(newItem);
+    }
+  }
+
+  if (session && (session as ExtendedSession).isModerator) {
+    const newItem = {
+      title: "Moderator Control Panel",
+      icon: <ManageAccounts />,
+      segment: "moderatorcontrolpanel",
+    };
+
+    // Check if the item already exists in NAVIGATION
+    const exists = NAVIGATION.some(item => item.segment === newItem.segment);
+
+    if (!exists) {
+      NAVIGATION.push(newItem);
+    }
+  }
+
+  if (session && (session as ExtendedSession).isAdministrator) {
+    const newItem = {
+      title: "Administrator Control Panel",
+      icon: <ManageAccounts />,
+      segment: "administratorcontrolpanel",
     };
 
     // Check if the item already exists in NAVIGATION

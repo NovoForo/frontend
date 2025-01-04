@@ -1,4 +1,4 @@
-import { Paper, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { Button, Paper, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
@@ -34,20 +34,24 @@ const CategoryForumPage = () => {
   if (!data || !data.topics) return <p>No data found.</p>;
 
   return (
-    <TableContainer component={Paper}>
-      <TableHead>
-        <TableRow>
-          <TableCell>Topic Title</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-      {data.topics.map((topic) => (
-        <TableRow>
-          <TableCell key={topic.Id}><Link to={`/category/${categoryId}/forums/${forumId}/topics/${topic.Id}`}>{topic.Title}</Link></TableCell>
-        </TableRow>
-      ))}
-      </TableBody>
-    </TableContainer>
+    <>
+      <Link to={`/category/${categoryId}/forums/${forumId}/topics/new`}><Button variant="contained">New Topic</Button></Link>
+      <br />
+      <TableContainer component={Paper}>
+        <TableHead>
+          <TableRow>
+            <TableCell>Topic Title</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+        {data.topics.map((topic) => (
+          <TableRow>
+            <TableCell key={topic.Id}><Link to={`/category/${categoryId}/forums/${forumId}/topics/${topic.Id}`}>{topic.Title}</Link></TableCell>
+          </TableRow>
+        ))}
+        </TableBody>
+      </TableContainer>
+    </>
   );
 };
 
