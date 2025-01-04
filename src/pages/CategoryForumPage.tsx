@@ -1,4 +1,5 @@
 import { Button, Paper, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { useSession } from "@toolpad/core";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
@@ -7,6 +8,7 @@ const CategoryForumPage = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const session = useSession();
   
   useEffect(() => {
     async function fetchData() {
@@ -35,8 +37,9 @@ const CategoryForumPage = () => {
 
   return (
     <>
-      <Link to={`/category/${categoryId}/forums/${forumId}/topics/new`}><Button variant="contained">New Topic</Button></Link>
-      <br />
+      {session &&
+        <Link to={`/category/${categoryId}/forums/${forumId}/topics/new`}><Button variant="contained">New Topic</Button></Link>
+      }
       <TableContainer component={Paper}>
         <TableHead>
           <TableRow>

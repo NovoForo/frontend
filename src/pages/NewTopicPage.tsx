@@ -39,6 +39,12 @@ export default function NewTopicsPage() {
                 navigate('/')
             });
     }
+
+    React.useEffect(() => {
+        if (!session) {
+            navigate('/')
+        }
+    })
     
     return (
         <>
