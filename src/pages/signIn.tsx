@@ -39,17 +39,6 @@ const login = async (formData: any): Promise<ExtendedSession> => {
           isModerator: data.isModerator,
           isAdministrator: data.isAdministrator,
         });
-
-        console.log({
-          user: {
-            name: data.name || 'Unknown User',
-            email: data.email || email || '',
-            image: data.image || 'https://avatars.githubusercontent.com/u/193647016?s=400&v=4',
-          },
-          token,
-          isModerator: data.isModerator,
-          isAdministrator: data.isAdministrator,
-        })
       } else {
         reject(new Error('Login failed. Incorrect credentials.'));
       }

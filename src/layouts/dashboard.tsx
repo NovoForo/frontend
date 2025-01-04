@@ -15,6 +15,7 @@ export default function Layout() {
       '/rules',
       '/forums',
       '/category/:categoryId/forums/:forumId',
+      '/category/:categoryId/forums/:forumId/topics/:topicId',
     ];
 
     const isSkippedUrl = (path) => {

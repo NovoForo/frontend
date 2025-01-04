@@ -1,9 +1,9 @@
-import { Paper, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { Paper, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
-const CategoryForumPage = () => {
-  const { categoryId, forumId } = useParams();
+const TopicPage = () => {
+  const { categoryId, forumId, topicId } = useParams();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,7 +12,7 @@ const CategoryForumPage = () => {
     async function fetchData() {
       try {
         const resp = await fetch(
-          `http://localhost:8000/categories/${categoryId}/forums/${forumId}`
+          `http://localhost:8000/categories/${categoryId}/forums/${forumId}/topics/${topicId}`
         );
         if (!resp.ok) {
           throw new Error(`Error: ${resp.statusText}`);
@@ -31,24 +31,29 @@ const CategoryForumPage = () => {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
-  if (!data || !data.topics) return <p>No data found.</p>;
+  if (!data || !data.posts) return <p>No data found.</p>;
 
   return (
+    <>
+    <Typography><h2>{data.posts[0].Title}</h2></Typography>
     <TableContainer component={Paper}>
       <TableHead>
         <TableRow>
-          <TableCell>Topic Title</TableCell>
+          <TableCell>Username</TableCell>
+          <TableCell>Post Content</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
-      {data.topics.map((topic) => (
-        <TableRow>
-          <TableCell key={topic.Id}><Link to={`/category/${categoryId}/forums/${forumId}/topics/${topic.Id}`}>{topic.Title}</Link></TableCell>
+      {data.posts.map((post) => (
+        <TableRow key={post.Id}>
+          <TableCell>{post.User.Username}</TableCell>
+          <TableCell>{post.Content}</TableCell>
         </TableRow>
       ))}
       </TableBody>
     </TableContainer>
+    </>
   );
 };
 
-export default CategoryForumPage;
+export default TopicPage;
