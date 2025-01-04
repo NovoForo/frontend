@@ -75,9 +75,14 @@ const TopicPage = () => {
   if (error) return <p>Error: {error}</p>;
   if (!data || !data.posts) return <p>No data found.</p>;
 
+  console.log(data)
+
   return (
     <>
-    <Typography><h2>{data.posts[0].Title}</h2></Typography>
+    <Typography>
+        <h2>{data.posts[0].Title}</h2>
+        <p>{data.posts[0].Topic.Description}</p>
+    </Typography>
     <TableContainer component={Paper}>
       <TableHead>
         <TableRow>
