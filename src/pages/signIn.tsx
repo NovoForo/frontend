@@ -5,20 +5,42 @@ import type { Session } from '@toolpad/core/AppProvider';
 import { useNavigate } from 'react-router-dom';
 import { useSession } from '../SessionContext';
 
-const fakeAsyncGetSession = async (formData: any): Promise<Session> => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (formData.get('password') === 'password') {
+export interface ExtendedSession extends Session {
+  token?: string; // Add token as an optional property
+}
+
+
+const login = async (formData: any): Promise<ExtendedSession> => {
+  const email = formData.get('email');
+  const password = formData.get('password');
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await fetch('http://localhost:8000/sign-in', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const token = data.token;
         resolve({
           user: {
-            name: 'Elaine Pimentel',
-            email: formData.get('email') || '',
-            image: 'https://avatars.githubusercontent.com/u/193647016?s=400&v=4',
+            name: data.name || 'Unknown User',
+            email: data.email || email || '',
+            image: data.image || 'https://avatars.githubusercontent.com/u/193647016?s=400&v=4',
           },
+          token,
         });
+      } else {
+        reject(new Error('Login failed. Incorrect credentials.'));
       }
-      reject(new Error('Incorrect credentials.'));
-    }, 1000);
+    } catch (error) {
+      reject(new Error('An error occurred while trying to log in.'));
+    }
   });
 };
 
@@ -31,7 +53,7 @@ export default function SignIn() {
       signIn={async (provider, formData, callbackUrl) => {
         // Demo session
         try {
-          const session = await fakeAsyncGetSession(formData);
+          const session = await login(formData);
           if (session) {
             setSession(session);
             navigate(callbackUrl || '/', { replace: true });

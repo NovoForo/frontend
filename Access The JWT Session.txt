@@ -1,0 +1,17 @@
+
+A component will look something like this
+
+import { useSession } from '../SessionContext';
+import { ExtendedSession } from './signin';
+export default function SomeProtectedPage() {
+  const { session } = useSession();
+
+  React.useEffect(() => {
+    if ((session as ExtendedSession).token) {
+      console.log('JWT:', (session as ExtendedSession).token);
+      // Use the token for API calls or other purposes
+    }
+  }, [session]);
+
+  return <div>Protected Content</div>;
+}
