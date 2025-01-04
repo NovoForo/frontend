@@ -41,7 +41,6 @@ export default function Layout() {
         <Stack alignItems="center">
           <Typography>Powered by <a href="https://github.com/NovoForo">NovoForo</a></Typography>
         </Stack>
-        
       </PageContainer>
     </DashboardLayout>
   );

@@ -1,12 +1,22 @@
-import { Paper, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, Button, Card, Paper, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+
 
 const TopicPage = () => {
   const { categoryId, forumId, topicId } = useParams();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [replyContent, setReplyContent] = useState('');
+
+  const handlePostClick = () => {
+    window.alert(topicId);
+
+    // Add logic to post reply
+
+    setReplyContent(''); // Clear the form
+  };
   
   useEffect(() => {
     async function fetchData() {
@@ -46,12 +56,35 @@ const TopicPage = () => {
       <TableBody>
       {data.posts.map((post) => (
         <TableRow key={post.Id}>
-          <TableCell>{post.User.Username}</TableCell>
+          <TableCell>
+            {post.User.Username}
+            <br />
+            {new Date(post.CreatedAt).toLocaleString()}
+
+          </TableCell>
           <TableCell>{post.Content}</TableCell>
         </TableRow>
       ))}
       </TableBody>
     </TableContainer>
+    <hr />
+    <Box component="form" noValidate autoComplete="off">
+    <TextField
+        id="replyContent"
+        label="Reply"
+        fullWidth
+        margin="normal"
+        value={replyContent} // Controlled value
+        onChange={(e) => setReplyContent(e.target.value)} // Update state on change
+      />
+      <Button 
+        variant="contained" 
+        onClick={handlePostClick}
+      >
+        Post
+      </Button>
+    </Box>
+
     </>
   );
 };
