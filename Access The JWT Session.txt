@@ -10,6 +10,7 @@ export default function SomeProtectedPage() {
     if ((session as ExtendedSession).token) {
       console.log('JWT:', (session as ExtendedSession).token);
       // Use the token for API calls or other purposes
+      // You can use .isModerator and .isAdministrator to enable UI features for moderators and adminsitrators!
     }
   }, [session]);
 
