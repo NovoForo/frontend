@@ -1,6 +1,8 @@
 import { Box, Button, Card, Paper, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
+import { useSession } from "@toolpad/core";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { ExtendedSession } from "./signIn";
 
 
 const TopicPage = () => {
@@ -9,11 +11,41 @@ const TopicPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [replyContent, setReplyContent] = useState('');
+  const session = useSession();
 
   const handlePostClick = () => {
-    window.alert(topicId);
 
-    // Add logic to post reply
+    fetch(`http://localhost:8000/s/categories/${categoryId}/forums/${forumId}/topics/${topicId}`,
+        {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${(session as ExtendedSession).token}`,
+            },
+            body: JSON.stringify({
+              content: replyContent, // Include the reply content in the body
+            }),
+          }
+    ).then(() => {
+        async function fetchData() {
+            try {
+              const resp = await fetch(
+                `http://localhost:8000/categories/${categoryId}/forums/${forumId}/topics/${topicId}`
+              );
+              if (!resp.ok) {
+                throw new Error(`Error: ${resp.statusText}`);
+              }
+              const result = await resp.json();
+              setData(result);
+            } catch (err) {
+              setError(err.message);
+            } finally {
+              setLoading(false);
+            }
+          }
+      
+          fetchData();
+    })
 
     setReplyContent(''); // Clear the form
   };
