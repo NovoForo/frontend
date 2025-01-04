@@ -1,10 +1,12 @@
 import * as React from 'react';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import GavelIcon from '@mui/icons-material/Gavel';
 import { AppProvider } from '@toolpad/core/react-router-dom';
 import { Outlet, useNavigate } from 'react-router-dom';
 import type { Navigation, Session } from '@toolpad/core';
 import { SessionContext } from './SessionContext';
+import {ManageAccounts} from "@mui/icons-material";
 
 const NAVIGATION: Navigation = [
   {
@@ -12,13 +14,14 @@ const NAVIGATION: Navigation = [
     title: 'Main items',
   },
   {
-    title: 'Dashboard',
+    title: 'Forums',
     icon: <DashboardIcon />,
+    segment: 'forums',
   },
   {
-    segment: 'orders',
-    title: 'Orders',
-    icon: <ShoppingCartIcon />,
+    title: 'Rules',
+    icon: <GavelIcon />,
+    segment: 'rules',
   },
 ];
 
@@ -40,6 +43,21 @@ export default function App() {
   }, [navigate]);
 
   const sessionContextValue = React.useMemo(() => ({ session, setSession }), [session, setSession]);
+
+  if (session) {
+    const newItem = {
+      title: "Manage Account",
+      icon: <ManageAccounts />,
+      segment: "manageaccount",
+    };
+
+    // Check if the item already exists in NAVIGATION
+    const exists = NAVIGATION.some(item => item.segment === newItem.segment);
+
+    if (!exists) {
+      NAVIGATION.push(newItem);
+    }
+  }
 
   return (
     <SessionContext.Provider value={sessionContextValue}>

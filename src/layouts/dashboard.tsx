@@ -9,7 +9,11 @@ export default function Layout() {
   const location = useLocation();
 
   if (!session) {
-    const skippedUrls = ['/']
+    const skippedUrls = [
+        '/',
+        '/rules',
+        '/forums'
+    ]
     if (!skippedUrls.includes(location.pathname)) {
       // Add the `callbackUrl` search parameter
       const redirectTo = `/sign-in?callbackUrl=${encodeURIComponent(location.pathname)}`;

@@ -6,6 +6,7 @@ import Layout from './layouts/dashboard';
 import DashboardPage from './pages';
 import OrdersPage from './pages/orders';
 import SignInPage from './pages/signIn';
+import RulesPage from "./pages/rules";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,18 @@ const router = createBrowserRouter([
           {
             path: '/',
             Component: DashboardPage,
+          },
+          {
+            path: '/forums',
+            Component: OrdersPage,
+          },
+          {
+            path: '/rules',
+            Component: RulesPage,
+          },
+          {
+            path: 'manageaccount',
+            Component: OrdersPage,
           },
           {
             path: '/orders',
