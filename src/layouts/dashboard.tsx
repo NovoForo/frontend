@@ -4,6 +4,7 @@ import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import { PageContainer } from '@toolpad/core/PageContainer';
 import { useSession } from '../SessionContext';
 import { match } from 'path-to-regexp';
+import { Stack, Typography } from '@mui/material';
 
 export default function Layout() {
   const { session } = useSession();
@@ -37,6 +38,10 @@ export default function Layout() {
     <DashboardLayout>
       <PageContainer>
         <Outlet />
+        <Stack alignItems="center">
+          <Typography>Powered by <a href="https://github.com/NovoForo">NovoForo</a></Typography>
+        </Stack>
+        
       </PageContainer>
     </DashboardLayout>
   );

@@ -7,6 +7,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import type { Navigation, Session } from '@toolpad/core';
 import { SessionContext } from './SessionContext';
 import {ManageAccounts} from "@mui/icons-material";
+import { Typography } from '@mui/material';
 
 const NAVIGATION: Navigation = [
   {
