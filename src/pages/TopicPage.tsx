@@ -100,23 +100,24 @@ const TopicPage = () => {
       </TableBody>
     </TableContainer>
     <hr />
-    <Box component="form" noValidate autoComplete="off">
-    <TextField
-        id="replyContent"
-        label="Reply"
-        fullWidth
-        margin="normal"
-        value={replyContent} // Controlled value
-        onChange={(e) => setReplyContent(e.target.value)} // Update state on change
-      />
-      <Button 
-        variant="contained" 
-        onClick={handlePostClick}
-      >
-        Post
-      </Button>
-    </Box>
-
+    {session && (
+        <Box component="form" noValidate autoComplete="off">
+        <TextField
+            id="replyContent"
+            label="Reply"
+            fullWidth
+            margin="normal"
+            value={replyContent} // Controlled value
+            onChange={(e) => setReplyContent(e.target.value)} // Update state on change
+        />
+        <Button 
+            variant="contained" 
+            onClick={handlePostClick}
+        >
+            Post
+        </Button>
+        </Box>
+    )}
     </>
   );
 };
