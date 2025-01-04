@@ -7,6 +7,7 @@ import DashboardPage from './pages';
 import OrdersPage from './pages/orders';
 import SignInPage from './pages/signIn';
 import RulesPage from "./pages/rules";
+import ForumsPage from "./pages/forumsPage";
 
 const router = createBrowserRouter([
   {
@@ -18,11 +19,11 @@ const router = createBrowserRouter([
         children: [
           {
             path: '/',
-            Component: DashboardPage,
+            Component: ForumsPage,
           },
           {
             path: '/forums',
-            Component: OrdersPage,
+            Component: ForumsPage,
           },
           {
             path: '/rules',
