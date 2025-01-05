@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { SignInPage } from '@toolpad/core/SignInPage';
 import type { Session } from '@toolpad/core/AppProvider';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSession } from '../SessionContext';
 
 export interface ExtendedSession extends Session {
@@ -54,8 +54,11 @@ export default function SignIn() {
   return (
     <SignInPage
       providers={[{ id: 'credentials', name: 'Credentials' }]}
+      slots={{
+        signUpLink: () => <><Link to='/register'>Register</Link></>,
+        forgotPasswordLink: () => <><Link to='/forgot-password'>Forgot Password</Link></>,
+      }}
       signIn={async (provider, formData, callbackUrl) => {
-        // Demo session
         try {
           const session = await login(formData);
           if (session) {
