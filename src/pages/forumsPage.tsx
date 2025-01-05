@@ -21,8 +21,8 @@ export default function ForumsPage() {
                     </Typography>
                     <Typography>{row.Description}</Typography>
 
-                    <TableContainer component={Paper}>
-                        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+                    <TableContainer component={Paper} sx={{ width: '100%' }}>
+                        <Table sx={{ width: '100%' }} size="small" aria-label="a dense table">
                             <TableHead>
                                 <TableRow>
                                     <TableCell>Forum Name</TableCell>

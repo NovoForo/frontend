@@ -1,4 +1,4 @@
-import { Button, Paper, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { useSession } from "@toolpad/core";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -40,19 +40,34 @@ const CategoryForumPage = () => {
       {session &&
         <Link to={`/category/${categoryId}/forums/${forumId}/topics/new`}><Button variant="contained">New Topic</Button></Link>
       }
-      <TableContainer component={Paper}>
-        <TableHead>
-          <TableRow>
-            <TableCell>Topic Title</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-        {data.topics.map((topic) => (
-          <TableRow>
-            <TableCell key={topic.Id}><Link to={`/category/${categoryId}/forums/${forumId}/topics/${topic.Id}`}>{topic.Title}</Link></TableCell>
-          </TableRow>
-        ))}
-        </TableBody>
+      <TableContainer component={Paper} sx={{ width: '100%' }}>
+        <Table sx={{ width: '100%' }}>
+          <TableHead>
+            <TableRow>
+              <TableCell>Topic Title</TableCell>
+              <TableCell>Statistics</TableCell>
+              <TableCell>Last Reply</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+          {console.log(data.topics)}
+          {data.topics.map((topic) => (
+            <TableRow key={topic.Id}>
+              <TableCell >
+                <Link to={`/category/${categoryId}/forums/${forumId}/topics/${topic.Id}`}>{topic.Title}</Link>
+                <br />
+                Posted on: {new Date(topic.CreatedAt).toLocaleString()}
+              </TableCell>
+              <TableCell>
+                {topic["Posts"].length - 1} Replies
+              </TableCell>
+              <TableCell>
+              <Link to='/'>{topic["Posts"].at(-1).User.Username}</Link> replied at: {new Date(topic["Posts"].at(-1).CreatedAt).toLocaleString()}
+              </TableCell>
+            </TableRow>
+          ))}
+          </TableBody>
+        </Table>
       </TableContainer>
     </>
   );
