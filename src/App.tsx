@@ -6,7 +6,7 @@ import { AppProvider } from '@toolpad/core/react-router-dom';
 import { Outlet, useNavigate } from 'react-router-dom';
 import type { Navigation, Session } from '@toolpad/core';
 import { SessionContext, useSession } from './SessionContext';
-import {ManageAccounts} from "@mui/icons-material";
+import {AdminPanelSettings, ManageAccounts, SafetyCheck} from "@mui/icons-material";
 import { Typography } from '@mui/material';
 
 import { ExtendedSession } from './pages/signIn';
@@ -65,7 +65,7 @@ export default function App() {
   if (session && (session as ExtendedSession).isModerator) {
     const newItem = {
       title: "Moderator Control Panel",
-      icon: <ManageAccounts />,
+      icon: <SafetyCheck />,
       segment: "moderatorcontrolpanel",
     };
 
@@ -80,7 +80,7 @@ export default function App() {
   if (session && (session as ExtendedSession).isAdministrator) {
     const newItem = {
       title: "Administrator Control Panel",
-      icon: <ManageAccounts />,
+      icon: <AdminPanelSettings />,
       segment: "administratorcontrolpanel",
     };
 
