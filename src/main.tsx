@@ -7,7 +7,7 @@ import DashboardPage from './pages';
 import OrdersPage from './pages/orders';
 import SignInPage from './pages/signIn';
 import RulesPage from "./pages/rules";
-import ForumsPage from "./pages/forumsPage";
+import ForumsPage from "./pages/ForumsPage";
 import CategoryForumPage from './pages/CategoryForumPage';
 import TopicPage from './pages/TopicPage';
 import NewTopicsPage from './pages/NewTopicPage';

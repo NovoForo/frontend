@@ -1,33 +1,35 @@
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Paper, TextField } from "@mui/material";
+import { Box, Button, Card, Divider, TextField, Typography } from "@mui/material";
 import { useSession } from "@toolpad/core";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ExtendedSession } from "./signIn";
-import { ExpandMore } from "@mui/icons-material";
+import { Post } from "../types";
 
 const TopicPage = () => {
   const { categoryId, forumId, topicId } = useParams();
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [replyContent, setReplyContent] = useState('');
-  const [page, setPage] = useState(1); // Start with page 1
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1); // For total pages
   const limit = 10;
   const session = useSession();
 
-  const fetchPosts = async (page: number) => {
-    setLoading(true);
+  const fetchPosts = async (currentPage: number) => {
     try {
-      const skip = (page - 1) * limit; // Calculate skip based on the current page
+      setLoading(true);
+      const skip = (currentPage - 1) * limit;
       const resp = await fetch(
-        `${import.meta.env.VITE_API_URL}/categories/${categoryId}/forums/${forumId}/topics/${topicId}?skip=${skip}&limit=${limit}`
+        `http://localhost:8000/categories/${categoryId}/forums/${forumId}/topics/${topicId}?skip=${skip}&limit=${limit}`
       );
       if (!resp.ok) {
         throw new Error(`Error: ${resp.statusText}`);
       }
       const result = await resp.json();
-      setData(result.posts);
-    } catch (err) {
+      setPosts(result.posts);
+      setTotalPages(Math.ceil(result.count / limit));
+    } catch (err: any) {
       setError(err.message);
     } finally {
       setLoading(false);
@@ -36,95 +38,82 @@ const TopicPage = () => {
 
   const handlePostClick = async () => {
     try {
-      const resp = await fetch(`${import.meta.env.VITE_API_URL}/s/categories/${categoryId}/forums/${forumId}/topics/${topicId}`, {
+      await fetch(`http://localhost:8000/s/categories/${categoryId}/forums/${forumId}/topics/${topicId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${(session as ExtendedSession).token}`,
+          Authorization: `Bearer ${(session as ExtendedSession).token}`,
         },
         body: JSON.stringify({ content: replyContent }),
       });
-      if (!resp.ok) {
-        throw new Error(`Error: ${resp.statusText}`);
-      }
-      const newReply = await resp.json(); // Get the newly created reply
-      newReply.post.User.Username = session?.user?.name;
-      setReplyContent('');
-      setData((prevData) => [...prevData, newReply.post]); // Append the new reply to the existing posts
-    } catch (err) {
+      setReplyContent(''); // Clear the form
+      await fetchPosts(page); // Refresh posts after submitting
+    } catch (err: any) {
       setError(err.message);
     }
   };
 
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-  };
-
   useEffect(() => {
-    fetchPosts(page); // Fetch posts when page changes
+    fetchPosts(page); // Fetch posts when component mounts or page changes
   }, [page]);
 
   if (error) return <p>Error: {error}</p>;
+  if (loading) return <p>Loading...</p>;
+  if (!posts || posts.length === 0) return <p>No data found</p>;
 
   return (
     <>
-      {data.length > 0 && (
-        <Accordion>
-          <AccordionSummary expandIcon={<ExpandMore />} style={{ fontSize: '1.3em' }}>
-            {data[0]?.Title}
-          </AccordionSummary>
-          <AccordionDetails>
-            <strong>Posted by:</strong> {data[0]?.User?.Username} at {new Date(data[0]?.CreatedAt).toLocaleString()}
-            <br />
-            {data[0]?.Topic.Description}
-          </AccordionDetails>
-        </Accordion>
-      )}
-
-      <hr />
-
-      {data.map((post) => (
-        <Paper key={post.Id} elevation={3} style={{ marginBottom: '1rem', padding: '1rem' }}>
-          <strong>{post?.User?.Username} at {new Date(post?.CreatedAt).toLocaleString()}</strong>
-          <br />
-          {post.Content}
-        </Paper>
-      ))}
-
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <Box display="flex" justifyContent="center" marginTop="1rem">
-          <Button
-            variant="outlined"
-            onClick={() => handlePageChange(page - 1)}
-            disabled={page === 1}
-            style={{ marginRight: '1rem' }}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={() => handlePageChange(page + 1)}
-            style={{ marginLeft: '1rem' }}
-          >
-            Next
-          </Button>
-        </Box>
-      )}
-
-      <hr />
-
-      {session && (
-        <Box
-          component="form"
-          noValidate
-          autoComplete="off"
-          onSubmit={(e) => {
-            e.preventDefault();
-            handlePostClick();
+      <Typography variant="h4" gutterBottom>
+        {posts[0]?.Title}
+      </Typography>
+      {posts.map((post) => (
+        <Card
+          key={post.Id}
+          sx={{
+            display: "flex",
+            marginBottom: "1rem",
+            padding: "1rem",
+            paddingLeft: "0",
           }}
         >
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              minWidth: "11.875rem",
+              padding: "1rem",
+            }}
+          >
+            <p>{post.User.Username}</p>
+            <p>{new Date(post.CreatedAt).toLocaleString()}</p>
+          </Box>
+          <Divider orientation="vertical" flexItem />
+          <Box sx={{ padding: "1rem" }}>{post.Content}</Box>
+        </Card>
+      ))}
+      <hr />
+      {/* Pagination Controls */}
+      <Box sx={{ display: "flex", justifyContent: "space-between", marginTop: "1rem" }}>
+        <Button
+          variant="contained"
+          disabled={page === 1}
+          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+        >
+          Previous
+        </Button>
+        <Typography variant="body1">Page {page} of {totalPages}</Typography>
+        <Button
+          variant="contained"
+          disabled={page === totalPages}
+          onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+        >
+          Next
+        </Button>
+      </Box>
+      <hr />
+      {session && (
+        <Box component="form" noValidate autoComplete="off" onSubmit={(e) => { e.preventDefault(); handlePostClick(); }}>
           <TextField
             id="replyContent"
             label="Reply"
