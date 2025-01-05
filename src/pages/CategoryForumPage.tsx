@@ -14,7 +14,7 @@ const CategoryForumPage = () => {
     async function fetchData() {
       try {
         const resp = await fetch(
-          `http://localhost:8000/categories/${categoryId}/forums/${forumId}`
+          import.meta.env.VITE_API_URL + `/categories/${categoryId}/forums/${forumId}`
         );
         if (!resp.ok) {
           throw new Error(`Error: ${resp.statusText}`);

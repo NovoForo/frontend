@@ -18,7 +18,7 @@ const login = async (formData: any): Promise<ExtendedSession> => {
 
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await fetch('http://localhost:8000/sign-in', {
+      const response = await fetch(import.meta.env.VITE_API_URL + '/sign-in', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

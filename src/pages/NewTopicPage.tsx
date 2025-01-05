@@ -22,7 +22,7 @@ export default function NewTopicsPage() {
     const navigate = useNavigate()
 
     const handlePostClick = () => {
-         fetch(`http://localhost:8000/s/categories/${categoryId}/forums/${forumId}/topics`,
+         fetch(import.meta.env.VITE_API_URL + `/s/categories/${categoryId}/forums/${forumId}/topics`,
                 {
                     method: "POST",
                     headers: {

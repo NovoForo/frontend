@@ -9,7 +9,7 @@ import Paper from '@mui/material/Paper';
 import Typography from "@mui/material/Typography";
 import {Link} from "react-router-dom";
 
-const rows = await fetch('http://localhost:8000/categories').then(res => res.json());
+const rows = await fetch(import.meta.env.VITE_API_URL + '/categories').then(res => res.json());
 
 export default function ForumsPage() {
     return (

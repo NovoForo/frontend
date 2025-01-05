@@ -1,4 +1,4 @@
-import { Box, Button, Card, Paper, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Paper, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
 import { useSession } from "@toolpad/core";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -15,7 +15,7 @@ const TopicPage = () => {
 
   const handlePostClick = () => {
 
-    fetch(`http://localhost:8000/s/categories/${categoryId}/forums/${forumId}/topics/${topicId}`,
+    fetch(import.meta.env.VITE_API_URL + `/s/categories/${categoryId}/forums/${forumId}/topics/${topicId}`,
         {
             method: "POST",
             headers: {
@@ -30,7 +30,7 @@ const TopicPage = () => {
         async function fetchData() {
             try {
               const resp = await fetch(
-                `http://localhost:8000/categories/${categoryId}/forums/${forumId}/topics/${topicId}`
+                import.meta.env.VITE_API_URL + `/categories/${categoryId}/forums/${forumId}/topics/${topicId}`
               );
               if (!resp.ok) {
                 throw new Error(`Error: ${resp.statusText}`);
@@ -54,7 +54,7 @@ const TopicPage = () => {
     async function fetchData() {
       try {
         const resp = await fetch(
-          `http://localhost:8000/categories/${categoryId}/forums/${forumId}/topics/${topicId}`
+          import.meta.env.VITE_API_URL + `/categories/${categoryId}/forums/${forumId}/topics/${topicId}`
         );
         if (!resp.ok) {
           throw new Error(`Error: ${resp.statusText}`);
@@ -79,10 +79,18 @@ const TopicPage = () => {
 
   return (
     <>
-    <Typography>
-        <h2>{data.posts[0].Title}</h2>
-        <p>{data.posts[0].Topic.Description}</p>
-    </Typography>
+    <Card variant="outlined">
+        <CardContent>
+            <Typography>
+                <h2>{data.posts[0].Title}</h2>
+                <Typography sx={{ color: 'text.secondary', mb: 1.5 }}>
+                    Posted by {data.posts[0].User.Username} at {new Date(data.posts[0].CreatedAt).toLocaleString()}
+                </Typography>
+                <p>{data.posts[0].Topic.Description}</p>
+            </Typography>
+        </CardContent>
+    </Card>
+    
     <TableContainer component={Paper}>
       <TableHead>
         <TableRow>
