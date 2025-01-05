@@ -12,7 +12,7 @@ const TopicPage = () => {
   const [error, setError] = useState(null);
   const [replyContent, setReplyContent] = useState('');
   const [skip, setSkip] = useState(0);
-  const limit = 1;
+  const limit = 10;
   const session = useSession();
 
   const fetchPosts = async (append = false) => {
