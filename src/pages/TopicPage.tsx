@@ -101,7 +101,15 @@ const TopicPage = () => {
 
     <hr />
     {session && (
-        <Box component="form" noValidate autoComplete="off">
+    <Box
+        component="form"
+        noValidate
+        autoComplete="off"
+        onSubmit={(e) => {
+            e.preventDefault(); // Prevent default form submission (which refreshes the page)
+            handlePostClick(); // Trigger the post action
+        }}
+    >
         <TextField
             id="replyContent"
             label="Reply"
@@ -110,14 +118,14 @@ const TopicPage = () => {
             value={replyContent} // Controlled value
             onChange={(e) => setReplyContent(e.target.value)} // Update state on change
         />
-        <Button 
-            variant="contained" 
-            onClick={handlePostClick}
+        <Button
+            type="submit" // Mark this button as the submit button
+            variant="contained"
         >
             Post
         </Button>
-        </Box>
-    )}
+    </Box>
+)}
     </>
   );
 };

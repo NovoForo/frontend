@@ -14,75 +14,81 @@ import { useState } from 'react';
 import { ExtendedSession } from './signIn';
 
 export default function NewTopicsPage() {
-      const { categoryId, forumId } = useParams();
+    const { categoryId, forumId } = useParams();
     const session = useSession();
     const [topicTitle, setTopicTitle] = useState('');
     const [topicDescription, setTopicDescription] = useState('');
     const [postContent, setPostContent] = useState('');
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const handlePostClick = () => {
-         fetch(import.meta.env.VITE_API_URL + `/s/categories/${categoryId}/forums/${forumId}/topics`,
-                {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                      "Authorization": `Bearer ${(session as ExtendedSession).token}`,
-                    },
-                    body: JSON.stringify({
-                      title: topicTitle,
-                      description: topicDescription,
-                      content: postContent,
-                    }),
-                  }
-            ).then(() => {
-                navigate('/')
-            });
-    }
+        fetch(import.meta.env.VITE_API_URL + `/s/categories/${categoryId}/forums/${forumId}/topics`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${(session as ExtendedSession).token}`,
+            },
+            body: JSON.stringify({
+                title: topicTitle,
+                description: topicDescription,
+                content: postContent,
+            }),
+        }).then(() => {
+            navigate('/');
+        });
+    };
 
     React.useEffect(() => {
         if (!session) {
-            navigate('/')
+            navigate('/');
         }
-    })
-    
+    }, [session, navigate]);
+
     return (
         <>
             {session && (
-            <Box component="form" noValidate autoComplete="off">
-            <TextField
-                id="topicTitle"
-                label="Title"
-                fullWidth
-                margin="normal"
-                value={topicTitle}
-                onChange={(e) => setTopicTitle(e.target.value)}
-            />
-            <TextField
-                id="topicDescription"
-                label="Description"
-                fullWidth
-                margin="normal"
-                value={topicDescription}
-                onChange={(e) => setTopicDescription(e.target.value)}
-            />
-            <TextField
-                id="postContent"
-                label="Content"
-                fullWidth
-                margin="normal"
-                value={postContent}
-                onChange={(e) => setPostContent(e.target.value)}
-            />
-            <br />
-            <Button 
-                variant="contained" 
-                onClick={handlePostClick}
-            >
-                Create New Topic
-            </Button>
-            </Box>
-        )}
+                <Box
+                    component="form"
+                    noValidate
+                    autoComplete="off"
+                    onSubmit={(e) => {
+                        e.preventDefault(); // Prevent default form submission
+                        handlePostClick(); // Call the post action
+                    }}
+                >
+                    <TextField
+                        id="topicTitle"
+                        label="Title"
+                        fullWidth
+                        margin="normal"
+                        value={topicTitle}
+                        onChange={(e) => setTopicTitle(e.target.value)}
+                    />
+                    <TextField
+                        id="topicDescription"
+                        label="Description"
+                        fullWidth
+                        margin="normal"
+                        value={topicDescription}
+                        onChange={(e) => setTopicDescription(e.target.value)}
+                    />
+                    <TextField
+                        id="postContent"
+                        label="Content"
+                        fullWidth
+                        margin="normal"
+                        value={postContent}
+                        onChange={(e) => setPostContent(e.target.value)}
+                    />
+                    <br />
+                    <Button
+                        type="submit" // Mark the button as the submit button
+                        variant="contained"
+                    >
+                        Create New Topic
+                    </Button>
+                </Box>
+            )}
         </>
     );
 }
