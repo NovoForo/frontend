@@ -1,8 +1,9 @@
-import { Box, Button, Card, CardContent, Paper, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardContent, Paper, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
 import { useSession } from "@toolpad/core";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ExtendedSession } from "./signIn";
+import { ExpandMore } from "@mui/icons-material";
 
 
 const TopicPage = () => {
@@ -79,39 +80,25 @@ const TopicPage = () => {
 
   return (
     <>
-    <Card variant="outlined">
-        <CardContent>
-            <Typography>
-                <h2>{data.posts[0].Title}</h2>
-                <Typography sx={{ color: 'text.secondary', mb: 1.5 }}>
-                    Posted by {data.posts[0].User.Username} at {new Date(data.posts[0].CreatedAt).toLocaleString()}
-                </Typography>
-                <p>{data.posts[0].Topic.Description}</p>
-            </Typography>
-        </CardContent>
-    </Card>
-    
-    <TableContainer component={Paper}>
-      <TableHead>
-        <TableRow>
-          <TableCell>Username</TableCell>
-          <TableCell>Post Content</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-      {data.posts.map((post) => (
-        <TableRow key={post.Id}>
-          <TableCell>
-            {post.User.Username}
-            <br />
-            {new Date(post.CreatedAt).toLocaleString()}
+    <Accordion>
+      <AccordionSummary expandIcon={<ExpandMore />} style={{fontSize: '1.3em'}}>{data.posts[0].Title}</AccordionSummary>
+      <AccordionDetails>
+        <strong>Posted by:</strong> {data.posts[0].User.Username} at {new Date(data.posts[0].CreatedAt).toLocaleString()}
+        <br />
+        {data.posts[0].Topic.Description}
+      </AccordionDetails>
+    </Accordion>
 
-          </TableCell>
-          <TableCell>{post.Content}</TableCell>
-        </TableRow>
+    <hr />
+
+    {data.posts.map((post) => (
+        <Paper key={post.Id} elevation={3}>
+            <strong>{post.User.Username} at {new Date(post.CreatedAt).toLocaleString()}</strong>
+            <br />
+            {post.Content}
+        </Paper>
       ))}
-      </TableBody>
-    </TableContainer>
+
     <hr />
     {session && (
         <Box component="form" noValidate autoComplete="off">
