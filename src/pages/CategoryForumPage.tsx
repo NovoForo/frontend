@@ -68,6 +68,11 @@ const CategoryForumPage = () => {
             </TableRow>
           </TableHead>
           <TableBody>
+            {data.topics.length == 0 && (
+              <TableRow>
+                <TableCell>There are no topics in the forum yet. Start a new discussion to get things going!</TableCell>
+              </TableRow>
+            )}
             {data.topics.map((topic) => (
               <TableRow key={topic.Id}>
                 <TableCell>
