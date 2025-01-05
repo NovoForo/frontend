@@ -38,7 +38,8 @@ const TopicPage = () => {
 
   const handlePostClick = async () => {
     try {
-      await fetch(`http://localhost:8000/s/categories/${categoryId}/forums/${forumId}/topics/${topicId}`, {
+      const skip = (page - 1) * limit;
+      await fetch(`http://localhost:8000/s/categories/${categoryId}/forums/${forumId}/topics/${topicId}?skip=${skip}&limit=${limit}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
