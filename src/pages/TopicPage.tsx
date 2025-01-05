@@ -11,13 +11,14 @@ const TopicPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [replyContent, setReplyContent] = useState('');
-  const [skip, setSkip] = useState(0);
+  const [page, setPage] = useState(1); // Start with page 1
   const limit = 10;
   const session = useSession();
 
-  const fetchPosts = async (append = false) => {
+  const fetchPosts = async (page: number) => {
     setLoading(true);
     try {
+      const skip = (page - 1) * limit; // Calculate skip based on the current page
       const resp = await fetch(
         `${import.meta.env.VITE_API_URL}/categories/${categoryId}/forums/${forumId}/topics/${topicId}?skip=${skip}&limit=${limit}`
       );
@@ -25,7 +26,7 @@ const TopicPage = () => {
         throw new Error(`Error: ${resp.statusText}`);
       }
       const result = await resp.json();
-      setData((prevData) => (append ? [...prevData, ...result.posts] : result.posts)); // Append or replace posts
+      setData(result.posts);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -55,18 +56,13 @@ const TopicPage = () => {
     }
   };
 
-  const loadMorePosts = () => {
-    setSkip((prevSkip) => prevSkip + limit); // Increment skip for next batch
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
   };
 
   useEffect(() => {
-    if (skip === 0) {
-      fetchPosts(false); // Initial fetch, replace data
-    } else {
-      fetchPosts(true); // Load more, append data
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [skip]);
+    fetchPosts(page); // Fetch posts when page changes
+  }, [page]);
 
   if (error) return <p>Error: {error}</p>;
 
@@ -98,9 +94,23 @@ const TopicPage = () => {
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <Button variant="outlined" onClick={loadMorePosts}>
-          Load more posts
-        </Button>
+        <Box display="flex" justifyContent="center" marginTop="1rem">
+          <Button
+            variant="outlined"
+            onClick={() => handlePageChange(page - 1)}
+            disabled={page === 1}
+            style={{ marginRight: '1rem' }}
+          >
+            Previous
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={() => handlePageChange(page + 1)}
+            style={{ marginLeft: '1rem' }}
+          >
+            Next
+          </Button>
+        </Box>
       )}
 
       <hr />
