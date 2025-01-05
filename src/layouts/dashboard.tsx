@@ -13,6 +13,7 @@ export default function Layout() {
   if (!session) {
     const skippedUrls = [
       '/',
+      '/register',
       '/rules',
       '/forums',
       '/category/:categoryId/forums/:forumId',

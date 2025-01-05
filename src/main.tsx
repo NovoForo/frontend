@@ -11,6 +11,7 @@ import ForumsPage from "./pages/ForumsPage";
 import CategoryForumPage from './pages/CategoryForumPage';
 import TopicPage from './pages/TopicPage';
 import NewTopicsPage from './pages/NewTopicPage';
+import SignUp from './pages/SignUp';
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
           {
             path: '/',
             Component: ForumsPage,
+          },
+          {
+            path: '/register',
+            Component: SignUp,
           },
           {
             path: '/forums',
