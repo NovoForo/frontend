@@ -1,13 +1,13 @@
-import { Box, Button, Card, Paper, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, Divider, TextField, Typography } from "@mui/material";
 import { useSession } from "@toolpad/core";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { ExtendedSession } from "./signIn";
-
+import { Post } from "../types";
 
 const TopicPage = () => {
   const { categoryId, forumId, topicId } = useParams();
-  const [data, setData] = useState(null);
+  const [posts, setPosts] = useState<Post[]>()
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [replyContent, setReplyContent] = useState('');
@@ -36,8 +36,9 @@ const TopicPage = () => {
                 throw new Error(`Error: ${resp.statusText}`);
               }
               const result = await resp.json();
-              setData(result);
-            } catch (err) {
+              // setData(result);
+              setPosts(result.posts)
+            } catch (err: any) {
               setError(err.message);
             } finally {
               setLoading(false);
@@ -60,8 +61,8 @@ const TopicPage = () => {
           throw new Error(`Error: ${resp.statusText}`);
         }
         const result = await resp.json();
-        setData(result);
-      } catch (err) {
+        setPosts(result.posts)
+      } catch (err: any) {
         setError(err.message);
       } finally {
         setLoading(false);
@@ -73,40 +74,29 @@ const TopicPage = () => {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
-  if (!data || !data.posts) return <p>No data found.</p>;
-
-  console.log(data)
+  if (!posts || posts.length == 0) return <p>No data found</p>
 
   return (
     <>
-    <Typography>
-        <h2>{data.posts[0].Title}</h2>
-        <p>{data.posts[0].Topic.Description}</p>
+    <Typography variant="h4" gutterBottom>
+        {posts[0].Title}
     </Typography>
-    <TableContainer component={Paper}>
-      <TableHead>
-        <TableRow>
-          <TableCell>Username</TableCell>
-          <TableCell>Post Content</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-      {data.posts.map((post) => (
-        <TableRow key={post.Id}>
-          <TableCell>
-            {post.User.Username}
-            <br />
-            {new Date(post.CreatedAt).toLocaleString()}
-
-          </TableCell>
-          <TableCell>{post.Content}</TableCell>
-        </TableRow>
-      ))}
-      </TableBody>
-    </TableContainer>
+      {posts.length > 0 && posts.map((post) => (
+          <Card key={post.Id} sx={{display: 'flex', marginBottom: '1rem', padding: '1rem', paddingLeft: '0'}}>
+            <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '11.875rem', padding: '1rem'}}>
+              <p>{post.User.Username}</p>
+              <p>{new Date(post.CreatedAt).toLocaleString()}</p>
+            </Box>
+            <Divider orientation="vertical" flexItem />
+            <Box sx={{padding: '1rem'}}>
+              {post.Content}
+            </Box>
+          </Card>
+        )
+      )}
     <hr />
     {session && (
-        <Box component="form" noValidate autoComplete="off">
+        < Box component="form" noValidate autoComplete="off">
         <TextField
             id="replyContent"
             label="Reply"
