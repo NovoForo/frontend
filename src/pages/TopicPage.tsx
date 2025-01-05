@@ -1,7 +1,7 @@
-import { Box, Button, Card, Divider, TextField, Typography } from "@mui/material";
+import { Badge, Box, Button, Card, Divider, TextField, Typography } from "@mui/material";
 import { useSession } from "@toolpad/core";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { ExtendedSession } from "./signIn";
 import { Post } from "../types";
 
@@ -86,11 +86,67 @@ const TopicPage = () => {
               padding: "1rem",
             }}
           >
-            <p>{post.User.Username}</p>
-            <p>{new Date(post.CreatedAt).toLocaleString()}</p>
+            <img src='https://avatars.githubusercontent.com/u/193647016?s=400&v=4' style={{
+              maxHeight: '100px',
+              maxWidth: '100px',
+            }}></img>
+
+            <p><Link to=''>{post.User.Username}</Link></p>
+
+            {post.User.IsModerator && (
+                  <Badge
+                  badgeContent="Mod"
+                  color="primary"
+                  overlap="circular"
+                >
+                </Badge>
+            )}
+
+            {post.User.IsAdministrator && (
+                  <Badge
+                  badgeContent="Administrator"
+                  color="error"
+                  overlap="circular"
+                >
+                </Badge>
+            )}
           </Box>
           <Divider orientation="vertical" flexItem />
-          <Box sx={{ padding: "1rem" }}>{post.Content}</Box>
+          <Box
+          sx={{
+            position: "relative",
+            padding: "1rem",
+            minHeight: "200px", // Adjust based on your needs
+          }}
+        >
+          <Typography
+            gutterBottom
+            sx={{ color: "text.secondary", fontSize: 14 }}
+          >
+            {new Date(post.CreatedAt).toLocaleString()}
+          </Typography>
+          {post.Content}
+
+
+          <Box
+              sx={{
+                position: "absolute",
+                bottom: "1rem",
+                left: "1rem",
+                right: "1rem",
+                width: '100%'
+              }}
+            >
+              {session && session.user?.name === post.User.Username && (
+                <>
+                  <Link to='/'><Button color='secondary'>Edit Post</Button></Link>
+                  <Link to='/'><Button color='error'>Delete Post</Button></Link>
+                </>
+              )}
+        </Box>
+          
+        </Box>
+
         </Card>
       ))}
       <hr />
