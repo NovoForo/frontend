@@ -18,6 +18,7 @@ export default function Layout() {
       '/forums',
       '/category/:categoryId/forums/:forumId',
       '/category/:categoryId/forums/:forumId/topics/:topicId',
+      '/category/:categoryId/forums/:forumId/topics/:topicId/posts/:postId',
     ];
 
     const isSkippedUrl = (path: string) => {

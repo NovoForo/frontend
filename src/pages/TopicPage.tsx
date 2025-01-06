@@ -100,7 +100,7 @@ const TopicPage = () => {
             {/* Post Actions */}
             {session && session.user?.name === post.User.Username && (
               <Stack direction="row" spacing={1} sx={{ marginTop: '1rem' }}>
-                <Button variant="outlined" color="secondary" size="small">Edit</Button>
+                <Button variant="outlined" color="secondary" size="small"><Link to={`/category/${categoryId}/forums/${forumId}/topics/${topicId}/posts/${post.Id}`}>Edit</Link></Button>
                 <Button variant="outlined" color="error" size="small">Delete</Button>
               </Stack>
             )}

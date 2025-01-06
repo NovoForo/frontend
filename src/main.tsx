@@ -11,6 +11,7 @@ import CategoryForumPage from './pages/CategoryForumPage';
 import TopicPage from './pages/TopicPage';
 import NewTopicsPage from './pages/NewTopicPage';
 import SignUp from './pages/SignUp';
+import EditPostPage from './pages/EditPostPage';
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
           {
             path: '/category/:categoryId/forums/:forumId/topics/:topicId',
             Component: TopicPage,
+          },
+          {
+            path: '/category/:categoryId/forums/:forumId/topics/:topicId/posts/:postId',
+            Component: EditPostPage,
           },
           {
             path: '/category/:categoryId/forums/:forumId/topics/new',
