@@ -1,4 +1,16 @@
-import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Pagination } from "@mui/material";
+import {
+  Button,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Pagination,
+  Box,
+  Typography,
+} from "@mui/material";
 import { useSession } from "@toolpad/core";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -8,9 +20,9 @@ const CategoryForumPage = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [page, setPage] = useState(1);  // Current page
-  const [totalTopics, setTotalTopics] = useState(0);  // Total number of topics
-  const [limit] = useState(10);  // Number of items per page
+  const [page, setPage] = useState(1); // Current page
+  const [totalTopics, setTotalTopics] = useState(0); // Total number of topics
+  const [limit] = useState(10); // Number of items per page
   const session = useSession();
 
   useEffect(() => {
@@ -18,14 +30,18 @@ const CategoryForumPage = () => {
       try {
         // Fetch total count
         const countResp = await fetch(
-          import.meta.env.VITE_API_URL + `/categories/${categoryId}/forums/${forumId}`
+          import.meta.env.VITE_API_URL +
+            `/categories/${categoryId}/forums/${forumId}`
         );
         const countResult = await countResp.json();
-        setTotalTopics(countResult.count);  // Set the total count of topics
+        setTotalTopics(countResult.count); // Set the total count of topics
 
         // Fetch topics for the current page
         const resp = await fetch(
-          import.meta.env.VITE_API_URL + `/categories/${categoryId}/forums/${forumId}?skip=${(page - 1) * limit}&limit=${limit}`
+          import.meta.env.VITE_API_URL +
+            `/categories/${categoryId}/forums/${forumId}?skip=${
+              (page - 1) * limit
+            }&limit=${limit}`
         );
         if (!resp.ok) {
           throw new Error(`Error: ${resp.statusText}`);
@@ -43,63 +59,126 @@ const CategoryForumPage = () => {
   }, [categoryId, forumId, page, limit]);
 
   const handlePageChange = (event, value) => {
-    setPage(value);  // Update the current page
+    setPage(value); // Update the current page
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
-  if (!data || !data.topics) return <p>No data found.</p>;
+  if (loading)
+    return (
+      <Box textAlign="center" mt={4}>
+        <Typography variant="h6">Loading...</Typography>
+      </Box>
+    );
+  if (error)
+    return (
+      <Box textAlign="center" mt={4}>
+        <Typography variant="h6" color="error">
+          Error: {error}
+        </Typography>
+      </Box>
+    );
+  if (!data || !data.topics)
+    return (
+      <Box textAlign="center" mt={4}>
+        <Typography variant="h6">No data found.</Typography>
+      </Box>
+    );
 
   return (
-    <>
+    <Box sx={{ maxWidth: 900, mx: "auto", mt: 4, px: 2 }}>
       {session && (
-        <Link to={`/category/${categoryId}/forums/${forumId}/topics/new`}>
-          <Button variant="contained">New Topic</Button>
-        </Link>
+        <Box mb={2} textAlign="right">
+          <Link
+            to={`/category/${categoryId}/forums/${forumId}/topics/new`}
+            style={{ textDecoration: "none" }}
+          >
+            <Button variant="contained" color="primary">
+              New Topic
+            </Button>
+          </Link>
+        </Box>
       )}
 
-      <TableContainer component={Paper} sx={{ width: '100%' }}>
-        <Table sx={{ width: '100%' }}>
-          <TableHead>
-            <TableRow>
-              <TableCell>Topic Title</TableCell>
-              <TableCell>Statistics</TableCell>
-              <TableCell>Last Reply</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data.topics.length == 0 && (
+      <Paper elevation={3}>
+        <TableContainer>
+          <Table>
+            <TableHead
+              sx={{
+                backgroundColor: "grey.100",
+              }}
+            >
               <TableRow>
-                <TableCell>There are no topics in the forum yet. Start a new discussion to get things going!</TableCell>
-              </TableRow>
-            )}
-            {data.topics.map((topic) => (
-              <TableRow key={topic.Id}>
-                <TableCell>
-                  <Link to={`/category/${categoryId}/forums/${forumId}/topics/${topic.Id}`}>{topic.Title}</Link>
-                  <br />
-                  Posted on: {new Date(topic.CreatedAt).toLocaleString()}
+                <TableCell sx={{ fontWeight: "bold" }}>Topic Title</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }} align="center">
+                  Statistics
                 </TableCell>
-                <TableCell>
-                  {topic["Posts"].length - 1} Replies
-                </TableCell>
-                <TableCell>
-                  <Link to='/'>{topic["Posts"].at(-1).User.Username}</Link> replied at: {new Date(topic["Posts"].at(-1).CreatedAt).toLocaleString()}
+                <TableCell sx={{ fontWeight: "bold" }} align="center">
+                  Last Reply
                 </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {data.topics.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={3}>
+                    <Typography variant="body1">
+                      There are no topics in the forum yet. Start a new
+                      discussion to get things going!
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              )}
+              {data.topics.map((topic) => (
+                <TableRow
+                  key={topic.Id}
+                  hover
+                  sx={{
+                    "&:last-child td, &:last-child th": { border: 0 },
+                  }}
+                >
+                  <TableCell>
+                    <Link
+                      to={`/category/${categoryId}/forums/${forumId}/topics/${topic.Id}`}
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      <Typography variant="subtitle1">{topic.Title}</Typography>
+                    </Link>
+                    <Typography variant="caption">
+                      Posted on:{" "}
+                      {new Date(topic.CreatedAt).toLocaleString()}
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography variant="body2" color="text.secondary">
+                      {topic["Posts"].length - 1} Replies
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography variant="body2" color="text.secondary">
+                      <Link to="/" style={{ textDecoration: "none" }}>
+                        {topic["Posts"].at(-1).User.Username}
+                      </Link>{" "}
+                      replied at:{" "}
+                      {new Date(
+                        topic["Posts"].at(-1).CreatedAt
+                      ).toLocaleString()}
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
 
-      <Pagination
-        count={Math.ceil(totalTopics / limit)}  // Total pages
-        page={page}  // Current page
-        onChange={handlePageChange}  // Handle page change
-        color="primary"
-        sx={{ marginTop: 2, display: 'flex', justifyContent: 'center' }}
-      />
-    </>
+      <Box mt={2} display="flex" justifyContent="center">
+        <Pagination
+          count={Math.ceil(totalTopics / limit)} // Total pages
+          page={page} // Current page
+          onChange={handlePageChange} // Handle page change
+          color="primary"
+        />
+      </Box>
+    </Box>
   );
 };
 

@@ -1,28 +1,37 @@
 import { useState, useEffect } from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Typography from "@mui/material/Typography";
-import {Link} from "react-router-dom";
+import { Link } from 'react-router-dom';
+import {
+  Box,
+  Card,
+  CardContent,
+  CircularProgress,
+  Divider,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography
+} from '@mui/material';
 
 type Category = {
-  Id: number,
-  Name: string,
-  Description: string,
-  Forums: Forum[]
-}
+  Id: number;
+  Name: string;
+  Description: string;
+  Forums: Forum[];
+};
 
 type Forum = {
-  Id: number
-}
+  Id: number;
+  Name?: string;
+  Description?: string;
+};
 
 export default function ForumsPage() {
-  const [categories, setCategories] = useState<Category[]>()
-  const [error, setError] = useState()
+  const [categories, setCategories] = useState<Category[]>();
+  const [error, setError] = useState<string>();
 
   useEffect(() => {
     async function fetchData() {
@@ -34,51 +43,77 @@ export default function ForumsPage() {
         }
 
         const result = await resp.json();
-        setCategories(result.Categories)
+        setCategories(result.Categories);
       } catch (err: any) {
-          setError(err.message);
+        setError(err.message);
       }
     }
 
     fetchData();
-  }, [])
+  }, []);
 
-  if (error) return <p>Error: {error}</p>;
-  // console.log(categories)
+  if (error) {
+    return (
+      <Box sx={{ p: 2 }}>
+        <Typography color="error">Error: {error}</Typography>
+      </Box>
+    );
+  }
+
+  if (!categories) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
-    <>
-      {categories && categories.map((category) => (
-        <div key={category.Id}>
-          <Typography variant="h5" gutterBottom>
-              {category.Name}
-          </Typography>
-          <Typography>{category.Description}</Typography>
+    <Box sx={{ p: 2 }}>
+      <Typography variant="h4" gutterBottom>
+        Forums
+      </Typography>
 
-          <TableContainer component={Paper} sx={{ width: '100%' }}>
-            <Table sx={{ width: '100%' }} size="small" aria-label="a dense table">
-              <TableHead>
+      {categories.map((category) => (
+        <Card key={category.Id} sx={{ mb: 3 }}>
+          <CardContent>
+            <Typography variant="h5" gutterBottom>
+              {category.Name}
+            </Typography>
+            <Typography variant="body2" color="text.secondary" gutterBottom>
+              {category.Description}
+            </Typography>
+
+            <Divider sx={{ my: 2 }} />
+
+            <TableContainer component={Paper}>
+              <Table size="small" aria-label="forums table">
+                <TableHead>
                   <TableRow>
-                      <TableCell>Forum Name</TableCell>
-                      <TableCell>Forum Description</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold' }}>Forum Name</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold' }}>Forum Description</TableCell>
                   </TableRow>
-              </TableHead>
-              <TableBody>
-                {category.Forums.map((sub_row) => (
-                  <TableRow key={sub_row["Id"]}>
-                    <TableCell component="th" scope="row">
-                      <Link to={`/category/${category["Id"]}/forums/${sub_row["Id"]}`}>{sub_row.Name}</Link>
-                    </TableCell>
-                    <TableCell>
-                      {sub_row.Description}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </div>
+                </TableHead>
+                <TableBody>
+                  {category.Forums.map((forum) => (
+                    <TableRow key={forum.Id}>
+                      <TableCell>
+                        <Link
+                          to={`/category/${category.Id}/forums/${forum.Id}`}
+                          style={{ textDecoration: 'none', color: '#1976d2' }}
+                        >
+                          {forum.Name}
+                        </Link>
+                      </TableCell>
+                      <TableCell>{forum.Description}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </CardContent>
+        </Card>
       ))}
-    </>
+    </Box>
   );
 }
