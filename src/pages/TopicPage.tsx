@@ -65,7 +65,7 @@ const TopicPage = () => {
     <Box sx={{ padding: '2rem' }}>
       {/* Topic Title */}
       <Typography variant="h4" gutterBottom sx={{ textAlign: 'center', fontWeight: 'bold' }}>
-        {posts[0]?.Title || "Topic Title"}
+        {posts[0]?.Topic?.Title || "Topic Title"}
       </Typography>
 
       {/* Posts Section */}

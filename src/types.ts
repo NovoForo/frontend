@@ -3,7 +3,8 @@ export type Post = {
     Title: string,
     User: User,
     CreatedAt: string,
-    Content: string
+    Content: string,
+    Topic: Topic
 }
   
 export type User = {

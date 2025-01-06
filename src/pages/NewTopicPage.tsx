@@ -40,8 +40,9 @@ export default function NewTopicsPage() {
           content: postContent,
         }),
       }
-    ).then(() => {
-      navigate('/');
+    ).then( async (resp) => {
+      let json = await resp.json();
+      navigate(`/category/${categoryId}/forums/${forumId}/topics/${json["Topic"]["Id"]}`);
     });
   };
 
