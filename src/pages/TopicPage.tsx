@@ -38,7 +38,7 @@ const TopicPage = () => {
 
   const handlePostClick = async () => {
     try {
-      await fetch(`http://localhost:8000/categories/${categoryId}/forums/${forumId}/topics/${topicId}`, {
+      await fetch(`http://localhost:8000/s/categories/${categoryId}/forums/${forumId}/topics/${topicId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
