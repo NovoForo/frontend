@@ -101,7 +101,20 @@ const TopicPage = () => {
             {session && session.user?.name === post.User.Username && (
               <Stack direction="row" spacing={1} sx={{ marginTop: '1rem' }}>
                 <Button variant="outlined" color="secondary" size="small"><Link to={`/category/${categoryId}/forums/${forumId}/topics/${topicId}/posts/${post.Id}`}>Edit</Link></Button>
-                <Button variant="outlined" color="error" size="small">Delete</Button>
+                <Button variant="outlined" color="error" size="small" onClick={() => {
+                  let confirm = window.confirm("Are you sure you want to delete this post?")
+
+                  if (confirm) {
+                    fetch(import.meta.env.VITE_API_URL + `/s/categories/${categoryId}/forums/${forumId}/topics/${topicId}/posts/${post.Id}`, {
+                      method: "DELETE",
+                      headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${(session as ExtendedSession).token}`,
+                      },
+                      body: JSON.stringify({}),
+                    });
+                  }
+                }}>Delete</Button>
               </Stack>
             )}
           </Box>
