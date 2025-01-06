@@ -79,9 +79,45 @@ const CategoryForumPage = () => {
     );
   if (!topics || topics.length == 0)
     return (
-      <Box textAlign="center" mt={4}>
-        <Typography variant="h6">No data found.</Typography>
-      </Box>
+      <Paper elevation={3}>
+        {session && (
+        <Box mb={2} textAlign="right">
+          <Link
+            to={`/category/${categoryId}/forums/${forumId}/topics/new`}
+            style={{ textDecoration: "none" }}
+          >
+            <Button variant="contained" color="primary">
+              New Topic
+            </Button>
+          </Link>
+        </Box>
+      )}
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ fontWeight: "bold" }}>Topic Title</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }} align="center">
+                Statistics
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold" }} align="center">
+                Last Reply
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+              <TableRow>
+                <TableCell colSpan={3}>
+                  <Typography variant="body1">
+                    There are no topics in the forum yet. Start a new
+                    discussion to get things going!
+                  </Typography>
+                </TableCell>
+              </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Paper>
     );
 
   return (

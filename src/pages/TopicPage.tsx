@@ -1,7 +1,7 @@
 import { Badge, Box, Button, Card, TextField, Typography, Avatar, Stack, Pagination } from "@mui/material";
 import { useSession } from "@toolpad/core";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { ExtendedSession } from "./signIn";
 import { Post } from "../types";
 
@@ -15,6 +15,7 @@ const TopicPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const limit = 10;
   const session = useSession();
+  const navigate = useNavigate();
 
   const fetchPosts = async (currentPage: number) => {
     try {
@@ -112,6 +113,11 @@ const TopicPage = () => {
                         Authorization: `Bearer ${(session as ExtendedSession).token}`,
                       },
                       body: JSON.stringify({}),
+                    }).then(async (resp) => {
+                      let success = await resp.json();
+                      if (success) {
+                        navigate('/')
+                      }
                     });
                   }
                 }}>Delete</Button>
