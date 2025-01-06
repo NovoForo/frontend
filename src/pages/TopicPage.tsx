@@ -1,4 +1,4 @@
-import { Badge, Box, Button, Card, Divider, TextField, Typography } from "@mui/material";
+import { Badge, Box, Button, Card, Divider, TextField, Typography, Avatar, Stack, Pagination } from "@mui/material";
 import { useSession } from "@toolpad/core";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -12,7 +12,7 @@ const TopicPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [replyContent, setReplyContent] = useState('');
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1); // For total pages
+  const [totalPages, setTotalPages] = useState(1);
   const limit = 10;
   const session = useSession();
 
@@ -38,8 +38,7 @@ const TopicPage = () => {
 
   const handlePostClick = async () => {
     try {
-      const skip = (page - 1) * limit;
-      await fetch(`http://localhost:8000/s/categories/${categoryId}/forums/${forumId}/topics/${topicId}?skip=${skip}&limit=${limit}`, {
+      await fetch(`http://localhost:8000/categories/${categoryId}/forums/${forumId}/topics/${topicId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -47,144 +46,98 @@ const TopicPage = () => {
         },
         body: JSON.stringify({ content: replyContent }),
       });
-      setReplyContent(''); // Clear the form
-      await fetchPosts(page); // Refresh posts after submitting
+      setReplyContent('');
+      await fetchPosts(page);
     } catch (err: any) {
       setError(err.message);
     }
   };
 
   useEffect(() => {
-    fetchPosts(page); // Fetch posts when component mounts or page changes
+    fetchPosts(page);
   }, [page]);
 
-  if (error) return <p>Error: {error}</p>;
-  if (loading) return <p>Loading...</p>;
-  if (!posts || posts.length === 0) return <p>No data found</p>;
+  if (error) return <Typography color="error" align="center">Error: {error}</Typography>;
+  if (loading) return <Typography align="center">Loading...</Typography>;
+  if (!posts.length) return <Typography align="center">No data found</Typography>;
 
   return (
-    <>
-      <Typography variant="h4" gutterBottom>
-        {posts[0]?.Title}
+    <Box sx={{ maxWidth: '800px', margin: '0 auto', padding: '2rem' }}>
+      {/* Topic Title */}
+      <Typography variant="h4" gutterBottom sx={{ textAlign: 'center', fontWeight: 'bold' }}>
+        {posts[0]?.Title || "Topic Title"}
       </Typography>
+
+      {/* Posts Section */}
       {posts.map((post) => (
-        <Card
-          key={post.Id}
-          sx={{
-            display: "flex",
-            marginBottom: "1rem",
-            padding: "1rem",
-            paddingLeft: "0",
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              minWidth: "11.875rem",
-              padding: "1rem",
-            }}
-          >
-            <img src='https://avatars.githubusercontent.com/u/193647016?s=400&v=4' style={{
-              maxHeight: '100px',
-              maxWidth: '100px',
-            }}></img>
-
-            <p><Link to=''>{post.User.Username}</Link></p>
-
+        <Card key={post.Id} sx={{ display: 'flex', marginBottom: '1.5rem', boxShadow: 2 }}>
+          {/* User Info */}
+          <Box sx={{ width: '200px', textAlign: 'center', padding: '1rem', borderRight: '1px solid #ddd' }}>
+            <Avatar
+              src="https://avatars.githubusercontent.com/u/193647016?s=400&v=4"
+              sx={{ width: 80, height: 80, margin: '0 auto' }}
+            />
+            <Typography variant="body1" sx={{ marginTop: '0.5rem' }}>
+              <Link to="">{post.User.Username}</Link>
+            </Typography>
             {post.User.IsModerator && (
-                  <Badge
-                  badgeContent="Mod"
-                  color="primary"
-                  overlap="circular"
-                >
-                </Badge>
+              <Badge badgeContent="Mod" color="primary" />
             )}
-
             {post.User.IsAdministrator && (
-                  <Badge
-                  badgeContent="Administrator"
-                  color="error"
-                  overlap="circular"
-                >
-                </Badge>
+              <Badge badgeContent="Admin" color="error" />
             )}
           </Box>
-          <Divider orientation="vertical" flexItem />
-          <Box
-          sx={{
-            position: "relative",
-            padding: "1rem",
-            minHeight: "200px", // Adjust based on your needs
-          }}
-        >
-          <Typography
-            gutterBottom
-            sx={{ color: "text.secondary", fontSize: 14 }}
-          >
-            {new Date(post.CreatedAt).toLocaleString()}
-          </Typography>
-          {post.Content}
 
+          {/* Post Content */}
+          <Box sx={{ flex: 1, padding: '1rem' }}>
+            <Typography variant="caption" color="text.secondary">
+              {new Date(post.CreatedAt).toLocaleString()}
+            </Typography>
+            <Typography variant="body1" sx={{ marginTop: '0.5rem' }}>
+              {post.Content}
+            </Typography>
 
-          <Box
-              sx={{
-                position: "absolute",
-                bottom: "1rem",
-                left: "1rem",
-                right: "1rem",
-                width: '100%'
-              }}
-            >
-              {session && session.user?.name === post.User.Username && (
-                <>
-                  <Link to='/'><Button color='secondary'>Edit Post</Button></Link>
-                  <Link to='/'><Button color='error'>Delete Post</Button></Link>
-                </>
-              )}
-        </Box>
-          
-        </Box>
-
+            {/* Post Actions */}
+            {session && session.user?.name === post.User.Username && (
+              <Stack direction="row" spacing={1} sx={{ marginTop: '1rem' }}>
+                <Button variant="outlined" color="secondary" size="small">Edit</Button>
+                <Button variant="outlined" color="error" size="small">Delete</Button>
+              </Stack>
+            )}
+          </Box>
         </Card>
       ))}
-      <hr />
+
       {/* Pagination Controls */}
-      <Box sx={{ display: "flex", justifyContent: "space-between", marginTop: "1rem" }}>
-        <Button
-          variant="contained"
-          disabled={page === 1}
-          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-        >
-          Previous
-        </Button>
-        <Typography variant="body1">Page {page} of {totalPages}</Typography>
-        <Button
-          variant="contained"
-          disabled={page === totalPages}
-          onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-        >
-          Next
-        </Button>
+      <Box sx={{ display: 'flex', justifyContent: 'center', margin: '2rem 0' }}>
+        <Pagination
+          count={totalPages}
+          page={page}
+          onChange={(e, value) => setPage(value)}
+          color="primary"
+        />
       </Box>
-      <hr />
+
+      {/* Reply Section */}
       {session && (
         <Box component="form" noValidate autoComplete="off" onSubmit={(e) => { e.preventDefault(); handlePostClick(); }}>
+          <Typography variant="h6" gutterBottom>Reply to Topic</Typography>
           <TextField
             id="replyContent"
-            label="Reply"
+            label="Your Reply"
             fullWidth
+            multiline
+            rows={3}
             margin="normal"
             value={replyContent}
             onChange={(e) => setReplyContent(e.target.value)}
           />
-          <Button type="submit" variant="contained">
-            Post
+          <Button type="submit" variant="contained" sx={{ marginTop: '1rem' }}>
+            Post Reply
           </Button>
         </Box>
       )}
-    </>
+    </Box>
   );
 };
 
