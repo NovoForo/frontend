@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Category, Forum} from "../types"
 import {
   Box,
   Card,
@@ -16,19 +17,6 @@ import {
   Typography
 } from '@mui/material';
 
-type Category = {
-  Id: number;
-  Name: string;
-  Description: string;
-  Forums: Forum[];
-};
-
-type Forum = {
-  Id: number;
-  Name?: string;
-  Description?: string;
-};
-
 export default function ForumsPage() {
   const [categories, setCategories] = useState<Category[]>();
   const [error, setError] = useState<string>();
@@ -36,7 +24,7 @@ export default function ForumsPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const resp = await fetch('http://localhost:8000/categories');
+        const resp = await fetch(import.meta.env.VITE_API_URL + '/categories');
 
         if (!resp.ok) {
           throw new Error(`Error: ${resp.statusText}`);

@@ -12,12 +12,13 @@ import {
   Typography,
 } from "@mui/material";
 import { useSession } from "@toolpad/core";
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { Topic } from "../types"
 
 const CategoryForumPage = () => {
   const { categoryId, forumId } = useParams();
-  const [data, setData] = useState(null);
+  const [topics, setTopics] = useState<Topic[]>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1); // Current page
@@ -47,8 +48,8 @@ const CategoryForumPage = () => {
           throw new Error(`Error: ${resp.statusText}`);
         }
         const result = await resp.json();
-        setData(result);
-      } catch (err) {
+        setTopics(result.topics);
+      } catch (err: any) {
         setError(err.message);
       } finally {
         setLoading(false);
@@ -58,7 +59,7 @@ const CategoryForumPage = () => {
     fetchData();
   }, [categoryId, forumId, page, limit]);
 
-  const handlePageChange = (event, value) => {
+  const handlePageChange = (event: React.ChangeEvent<unknown>, value: SetStateAction<number>) => {
     setPage(value); // Update the current page
   };
 
@@ -76,7 +77,7 @@ const CategoryForumPage = () => {
         </Typography>
       </Box>
     );
-  if (!data || !data.topics)
+  if (!topics || topics.length == 0)
     return (
       <Box textAlign="center" mt={4}>
         <Typography variant="h6">No data found.</Typography>
@@ -84,7 +85,7 @@ const CategoryForumPage = () => {
     );
 
   return (
-    <Box sx={{ maxWidth: 900, mx: "auto", mt: 4, px: 2 }}>
+    <Box sx={{ mt: 4, px: 2 }}>
       {session && (
         <Box mb={2} textAlign="right">
           <Link
@@ -101,11 +102,7 @@ const CategoryForumPage = () => {
       <Paper elevation={3}>
         <TableContainer>
           <Table>
-            <TableHead
-              sx={{
-                backgroundColor: "grey.100",
-              }}
-            >
+            <TableHead>
               <TableRow>
                 <TableCell sx={{ fontWeight: "bold" }}>Topic Title</TableCell>
                 <TableCell sx={{ fontWeight: "bold" }} align="center">
@@ -117,7 +114,7 @@ const CategoryForumPage = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data.topics.length === 0 && (
+              {topics.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={3}>
                     <Typography variant="body1">
@@ -127,7 +124,7 @@ const CategoryForumPage = () => {
                   </TableCell>
                 </TableRow>
               )}
-              {data.topics.map((topic) => (
+              {topics.length > 0 && topics.map((topic) => (
                 <TableRow
                   key={topic.Id}
                   hover
@@ -149,17 +146,17 @@ const CategoryForumPage = () => {
                   </TableCell>
                   <TableCell align="center">
                     <Typography variant="body2" color="text.secondary">
-                      {topic["Posts"].length - 1} Replies
+                      {topic.Posts.length - 1} Replies
                     </Typography>
                   </TableCell>
                   <TableCell align="center">
                     <Typography variant="body2" color="text.secondary">
                       <Link to="/" style={{ textDecoration: "none" }}>
-                        {topic["Posts"].at(-1).User.Username}
+                        {topic.Posts[topic.Posts.length - 1].User.Username}
                       </Link>{" "}
                       replied at:{" "}
                       {new Date(
-                        topic["Posts"].at(-1).CreatedAt
+                        topic.Posts[topic.Posts.length - 1].CreatedAt
                       ).toLocaleString()}
                     </Typography>
                   </TableCell>

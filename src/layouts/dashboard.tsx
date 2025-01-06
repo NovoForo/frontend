@@ -20,7 +20,7 @@ export default function Layout() {
       '/category/:categoryId/forums/:forumId/topics/:topicId',
     ];
 
-    const isSkippedUrl = (path) => {
+    const isSkippedUrl = (path: string) => {
       return skippedUrls.some((pattern) => {
         const matcher = match(pattern, { decode: decodeURIComponent });
         return matcher(path) !== false;
@@ -37,7 +37,7 @@ export default function Layout() {
 
   return (
     <DashboardLayout>
-      <PageContainer>
+      <PageContainer title={""}>
         <Outlet />
         <Stack alignItems="center">
           <Typography>Powered by <a href="https://github.com/NovoForo">NovoForo</a></Typography>

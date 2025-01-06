@@ -1,4 +1,4 @@
-import { Badge, Box, Button, Card, Divider, TextField, Typography, Avatar, Stack, Pagination } from "@mui/material";
+import { Badge, Box, Button, Card, TextField, Typography, Avatar, Stack, Pagination } from "@mui/material";
 import { useSession } from "@toolpad/core";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -21,7 +21,7 @@ const TopicPage = () => {
       setLoading(true);
       const skip = (currentPage - 1) * limit;
       const resp = await fetch(
-        `http://localhost:8000/categories/${categoryId}/forums/${forumId}/topics/${topicId}?skip=${skip}&limit=${limit}`
+        import.meta.env.VITE_API_URL + `/categories/${categoryId}/forums/${forumId}/topics/${topicId}?skip=${skip}&limit=${limit}`
       );
       if (!resp.ok) {
         throw new Error(`Error: ${resp.statusText}`);
@@ -38,7 +38,7 @@ const TopicPage = () => {
 
   const handlePostClick = async () => {
     try {
-      await fetch(`http://localhost:8000/s/categories/${categoryId}/forums/${forumId}/topics/${topicId}`, {
+      await fetch(import.meta.env.VITE_API_URL + `/s/categories/${categoryId}/forums/${forumId}/topics/${topicId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -62,7 +62,7 @@ const TopicPage = () => {
   if (!posts.length) return <Typography align="center">No data found</Typography>;
 
   return (
-    <Box sx={{ maxWidth: '800px', margin: '0 auto', padding: '2rem' }}>
+    <Box sx={{ padding: '2rem' }}>
       {/* Topic Title */}
       <Typography variant="h4" gutterBottom sx={{ textAlign: 'center', fontWeight: 'bold' }}>
         {posts[0]?.Title || "Topic Title"}
@@ -72,10 +72,10 @@ const TopicPage = () => {
       {posts.map((post) => (
         <Card key={post.Id} sx={{ display: 'flex', marginBottom: '1.5rem', boxShadow: 2 }}>
           {/* User Info */}
-          <Box sx={{ width: '200px', textAlign: 'center', padding: '1rem', borderRight: '1px solid #ddd' }}>
+          <Box sx={{ width: '20%', textAlign: 'center', padding: '1rem', borderRight: '1px solid #ddd' }}>
             <Avatar
               src="https://avatars.githubusercontent.com/u/193647016?s=400&v=4"
-              sx={{ width: 80, height: 80, margin: '0 auto' }}
+              sx={{ height: 'auto', width: '70%', margin: '0 auto' }}
             />
             <Typography variant="body1" sx={{ marginTop: '0.5rem' }}>
               <Link to="">{post.User.Username}</Link>
