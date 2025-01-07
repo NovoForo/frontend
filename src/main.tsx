@@ -12,6 +12,7 @@ import TopicPage from './pages/TopicPage';
 import NewTopicsPage from './pages/NewTopicPage';
 import SignUp from './pages/SignUp';
 import EditPostPage from './pages/EditPostPage';
+import AdministratorControlPanelPage from './pages/AdministratorControlPanelPage';
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
           {
             path: '/category/:categoryId/forums/:forumId/topics/new',
             Component: NewTopicsPage,
+          },
+          {
+            path: '/administratorcontrolpanel',
+            Component: AdministratorControlPanelPage,
           },
           {
             path: '/rules',

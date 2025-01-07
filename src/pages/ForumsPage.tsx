@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Category, Forum} from "../types"
+import { Category, Forum } from "../types";
 import {
   Box,
   Card,
@@ -42,66 +42,72 @@ export default function ForumsPage() {
 
   if (error) {
     return (
-      <Box sx={{ p: 2 }}>
-        <Typography color="error">Error: {error}</Typography>
-      </Box>
+        <Box sx={{ p: 2 }}>
+          <Typography color="error">Error: {error}</Typography>
+        </Box>
     );
   }
 
   if (!categories) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-        <CircularProgress />
-      </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+          <CircularProgress />
+        </Box>
     );
   }
 
   return (
-    <Box sx={{ p: 2 }}>
-      <Typography variant="h4" gutterBottom>
-        Forums
-      </Typography>
+      <Box sx={{ p: 2 }}>
+        <Typography variant="h4" gutterBottom>
+          Forums
+        </Typography>
 
-      {categories.map((category) => (
-        <Card key={category.Id} sx={{ mb: 3 }}>
-          <CardContent>
-            <Typography variant="h5" gutterBottom>
-              {category.Name}
-            </Typography>
-            <Typography variant="body2" color="text.secondary" gutterBottom>
-              {category.Description}
-            </Typography>
+        {categories.map((category) => (
+            <Card key={category.Id} sx={{ mb: 3 }}>
+              <CardContent>
+                <Typography variant="h5" gutterBottom>
+                  {category.Name}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" gutterBottom>
+                  {category.Description}
+                </Typography>
 
-            <Divider sx={{ my: 2 }} />
+                <Divider sx={{ my: 2 }} />
 
-            <TableContainer component={Paper}>
-              <Table size="small" aria-label="forums table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell sx={{ fontWeight: 'bold' }}>Forum Name</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }}>Forum Description</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {category.Forums.map((forum) => (
-                    <TableRow key={forum.Id}>
-                      <TableCell>
-                        <Link
-                          to={`/category/${category.Id}/forums/${forum.Id}`}
-                          style={{ textDecoration: 'none', color: '#1976d2' }}
-                        >
-                          {forum.Name}
-                        </Link>
-                      </TableCell>
-                      <TableCell>{forum.Description}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </CardContent>
-        </Card>
-      ))}
-    </Box>
+                {category.Forums && category.Forums.length > 0 ? (
+                    <TableContainer component={Paper}>
+                      <Table size="small" aria-label="forums table">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell sx={{ fontWeight: 'bold' }}>Forum Name</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold' }}>Forum Description</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {category.Forums.map((forum) => (
+                              <TableRow key={forum.Id}>
+                                <TableCell>
+                                  <Link
+                                      to={`/category/${category.Id}/forums/${forum.Id}`}
+                                      style={{ textDecoration: 'none', color: '#1976d2' }}
+                                  >
+                                    {forum.Name}
+                                  </Link>
+                                </TableCell>
+                                <TableCell>{forum.Description}</TableCell>
+                              </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                ) : (
+                    <Typography variant="body1" color="text.secondary" gutterBottom>
+                      No forums available in this category.
+                    </Typography>
+                )}
+              </CardContent>
+            </Card>
+        ))}
+      </Box>
   );
 }
