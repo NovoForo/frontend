@@ -4,6 +4,7 @@ import { SignInPage } from '@toolpad/core/SignInPage';
 import type { Session } from '@toolpad/core/AppProvider';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSession } from '../SessionContext';
+import MD5 from 'crypto-js/md5';
 
 export interface ExtendedSession extends Session {
   token?: string; // Add token as an optional property
@@ -29,17 +30,19 @@ const login = async (formData: any): Promise<ExtendedSession> => {
       if (response.ok) {
         const data = await response.json();
         const token = data.token;
+
         resolve({
           user: {
             name: data.name || 'Unknown User',
             email: data.email || email || '',
-            image: data.image || 'http://www.gravatar.com/avatar/' + data.email,
+            image: `http://www.gravatar.com/avatar/${data["HashedEmailAddress"] || ''}`,
           },
           token,
           isModerator: data.isModerator,
           isAdministrator: data.isAdministrator,
         });
-      } else {
+      }
+      else {
         reject(new Error('Login failed. Incorrect credentials.'));
       }
     } catch (error) {

@@ -21,7 +21,7 @@ async function loginToBackend(email: string, password: string): Promise<Extended
         user: {
             name: data.name || 'Unknown User',
             email: data.email || email || '',
-            image: data.image || 'http://www.gravatar.com/avatar/' + data.email,
+            image: data.image || 'http://www.gravatar.com/avatar/' + data.HashedEmailAddress,
         },
         token: data.token,
         isModerator: data.isModerator,
