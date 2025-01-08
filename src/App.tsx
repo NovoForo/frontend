@@ -1,100 +1,85 @@
-import * as React from "react";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import GavelIcon from "@mui/icons-material/Gavel";
-import { AppProvider } from "@toolpad/core/react-router-dom";
-import { Outlet, useNavigate } from "react-router-dom";
-import type { Navigation, Session } from "@toolpad/core";
-import { SessionContext } from "./SessionContext";
-import { AdminPanelSettings, ManageAccounts, SafetyCheck } from "@mui/icons-material";
-
-import { ExtendedSession } from "./pages/signIn";
+'use client';
+import * as React from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { AppProvider } from '@toolpad/core/react-router-dom';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import GavelIcon from '@mui/icons-material/Gavel';
+import { AdminPanelSettings, ManageAccounts, SafetyCheck } from '@mui/icons-material';
+import type { Navigation } from '@toolpad/core';
+import { SessionProvider, useSession, ExtendedSession } from './SessionProvider';
 
 const NAVIGATION: Navigation = [
-  {
-    kind: "header",
-    title: "Main items",
-  },
-  {
-    title: "Forums",
-    icon: <DashboardIcon />,
-    segment: "forums",
-  },
-  {
-    title: "Rules",
-    icon: <GavelIcon />,
-    segment: "rules",
-  },
+  { kind: 'header', title: 'Main items' },
+  { title: 'Forums', icon: <DashboardIcon />, segment: 'forums' },
+  { title: 'Rules', icon: <GavelIcon />, segment: 'rules' },
 ];
 
 const BRANDING = {
-  title: "NovoForo",
+  title: 'NovoForo',
 };
 
-export default function App() {
-  const [session, setSession] = React.useState<Session | null>(null);
+function AppContent() {
   const navigate = useNavigate();
+  const { session, signOut } = useSession();
 
-  const signIn = React.useCallback(() => {
-    navigate("/sign-in");
-  }, [navigate]);
+  // signOut is provided by our SessionProvider
+  // We'll link it here so Toolpad can use it
+  const handleSignOut = React.useCallback(() => {
+    signOut();
+    navigate('/sign-in');
+  }, [signOut, navigate]);
 
-  const signOut = React.useCallback(() => {
-    setSession(null);
-    navigate("/sign-in");
-  }, [navigate]);
-
-  const sessionContextValue = React.useMemo(() => ({ session, setSession }), [session, setSession]);
-
+  // (Optional) Dynamically add nav items
   if (session) {
-    const newItem = {
-      title: "Manage Account",
+    const manageAccount = {
+      title: 'Manage Account',
       icon: <ManageAccounts />,
-      segment: "manageaccount",
+      segment: 'manageaccount',
     };
-
-    // Check if the item already exists in NAVIGATION
-    const exists = NAVIGATION.some((item) => "segment" in item && item.segment === newItem.segment);
-
-    if (!exists) {
-      NAVIGATION.push(newItem);
+    if (!NAVIGATION.some((item) => 'segment' in item && item.segment === manageAccount.segment)) {
+      NAVIGATION.push(manageAccount);
     }
   }
-
-  if (session && (session as ExtendedSession).isModerator) {
-    const newItem = {
-      title: "Moderator Control Panel",
+  if (session?.isModerator) {
+    const modItem = {
+      title: 'Moderator Control Panel',
       icon: <SafetyCheck />,
-      segment: "moderatorcontrolpanel",
+      segment: 'moderatorcontrolpanel',
     };
-
-    // Check if the item already exists in NAVIGATION
-    const exists = NAVIGATION.some((item) => "segment" in item && item.segment === newItem.segment);
-
-    if (!exists) {
-      NAVIGATION.push(newItem);
+    if (!NAVIGATION.some((item) => 'segment' in item && item.segment === modItem.segment)) {
+      NAVIGATION.push(modItem);
     }
   }
-
-  if (session && (session as ExtendedSession).isAdministrator) {
-    const newItem = {
-      title: "Administrator Control Panel",
+  if (session?.isAdministrator) {
+    const adminItem = {
+      title: 'Administrator Control Panel',
       icon: <AdminPanelSettings />,
-      segment: "administratorcontrolpanel",
+      segment: 'administratorcontrolpanel',
     };
-
-    // Check if the item already exists in NAVIGATION
-    const exists = NAVIGATION.some((item) => "segment" in item && item.segment === newItem.segment);
-
-    if (!exists) {
-      NAVIGATION.push(newItem);
+    if (!NAVIGATION.some((item) => 'segment' in item && item.segment === adminItem.segment)) {
+      NAVIGATION.push(adminItem);
     }
   }
 
   return (
-    <SessionContext.Provider value={sessionContextValue}>
-      <AppProvider navigation={NAVIGATION} branding={BRANDING} session={session} authentication={{ signIn, signOut }}>
+      <AppProvider
+          navigation={NAVIGATION}
+          branding={BRANDING}
+          session={session}
+          authentication={{
+            signIn: () => navigate('/sign-in'), // If Toolpad tries to sign in, we navigate
+            signOut: handleSignOut,
+          }}
+      >
         <Outlet />
       </AppProvider>
-    </SessionContext.Provider>
+  );
+}
+
+export default function App() {
+  return (
+      <SessionProvider>
+        <AppContent />
+      </SessionProvider>
   );
 }

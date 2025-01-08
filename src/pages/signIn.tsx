@@ -53,6 +53,10 @@ export default function SignIn() {
   const navigate = useNavigate();
   return (
     <SignInPage
+        formFields={[
+          { type: 'email', name: 'email', label: 'Email' },
+          { type: 'password', name: 'password', label: 'Password' },
+        ]}
       providers={[{ id: 'credentials', name: 'Credentials' }]}
       slots={{
         signUpLink: () => <><Link to='/register'>Register</Link></>,

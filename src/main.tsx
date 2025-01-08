@@ -13,6 +13,7 @@ import NewTopicsPage from "./pages/NewTopicPage";
 import SignUp from "./pages/SignUp";
 import EditPostPage from "./pages/EditPostPage";
 import AdministratorControlPanelPage from "./pages/AdministratorControlPanelPage";
+import CustomSignIn from "./pages/CustomSignIn";
 
 const router = createBrowserRouter([
   {
@@ -70,7 +71,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/sign-in",
-        Component: SignInPage,
+        Component: CustomSignIn,
       },
     ],
   },
