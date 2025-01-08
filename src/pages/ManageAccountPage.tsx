@@ -64,6 +64,8 @@ export default function ManageAccountPage() {
         const json = await response.json();
         setAlertMessage('Account updated successfully!');
         setOpenAlert(true);
+        window.localStorage.removeItem('session');
+        window.location.reload();
       } else {
         setAlertMessage('Failed to update account. Please try again.');
         setOpenAlert(true);
@@ -155,7 +157,7 @@ export default function ManageAccountPage() {
                   <TextField
                       required
                       id="displayName"
-                      label="Display Name"
+                      label="Username"
                       fullWidth
                       margin="normal"
                       value={displayName}
@@ -177,7 +179,7 @@ export default function ManageAccountPage() {
                   <TextField
                       required
                       id="password"
-                      label="Password"
+                      label="New Password"
                       type="password"
                       fullWidth
                       margin="normal"
