@@ -33,7 +33,7 @@ const login = async (formData: any): Promise<ExtendedSession> => {
           user: {
             name: data.name || 'Unknown User',
             email: data.email || email || '',
-            image: data.image || 'https://avatars.githubusercontent.com/u/193647016?s=400&v=4',
+            image: data.image || 'http://www.gravatar.com/avatar/' + data.email,
           },
           token,
           isModerator: data.isModerator,

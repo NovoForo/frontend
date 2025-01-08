@@ -3,8 +3,7 @@ import * as ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App";
 import Layout from "./layouts/dashboard";
-import OrdersPage from "./pages/orders";
-import SignInPage from "./pages/signIn";
+import ManageAccountPage from "./pages/ManageAccountPage";
 import RulesPage from "./pages/rules";
 import ForumsPage from "./pages/ForumsPage";
 import CategoryForumPage from "./pages/CategoryForumPage";
@@ -61,11 +60,7 @@ const router = createBrowserRouter([
           },
           {
             path: "/manageaccount",
-            Component: OrdersPage,
-          },
-          {
-            path: "/orders",
-            Component: OrdersPage,
+            Component: ManageAccountPage,
           },
         ],
       },

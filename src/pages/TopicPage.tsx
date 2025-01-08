@@ -82,7 +82,7 @@ const TopicPage = () => {
             {/* User Info */}
             <Box sx={{ width: "20%", textAlign: "center", padding: "1rem", borderRight: "1px solid #ddd" }}>
               <Avatar
-                src="https://avatars.githubusercontent.com/u/193647016?s=400&v=4"
+                src={"http://www.gravatar.com/avatar/" + post.User.Email}
                 sx={{ height: "auto", width: "70%", margin: "0 auto" }}
               />
               <Typography variant="body1" sx={{ marginTop: "0.5rem" }}>
