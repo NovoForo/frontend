@@ -67,13 +67,16 @@ const AdministratorControlPanelPage = () => {
   };
 
   const handleAddForum = () => {
-    fetch(import.meta.env.VITE_API_URL + `/s/categories/${selectedCategory}`, {
+    fetch(import.meta.env.VITE_API_URL + `/a/categories/${selectedCategory}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${session?.token}`,
       },
-      body: JSON.stringify({ newForum }),
+      body: JSON.stringify({
+        "name": newForum.name,
+        "description": newForum.description,
+      }),
     })
       .then((response) => {
         if (response.ok) {
