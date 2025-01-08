@@ -4,15 +4,15 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App";
 import Layout from "./layouts/dashboard";
 import ManageAccountPage from "./pages/ManageAccountPage";
-import RulesPage from "./pages/rules";
-import ForumsPage from "./pages/ForumsPage";
-import CategoryForumPage from "./pages/CategoryForumPage";
-import TopicPage from "./pages/TopicPage";
-import NewTopicsPage from "./pages/NewTopicPage";
+import RulesPage from "./pages/RulesPage";
+import SiteIndexPage from "./pages/SiteIndexPage";
+import ListForumTopics from "./pages/ListForumTopics";
+import ViewTopicPage from "./pages/ViewTopicPage";
+import NewTopicsPage from "./pages/CreateNewTopicPage";
 import SignUp from "./pages/SignUp";
 import EditPostPage from "./pages/EditPostPage";
 import AdministratorControlPanelPage from "./pages/AdministratorControlPanelPage";
-import CustomSignIn from "./pages/CustomSignIn";
+import SignIn from "./pages/SignIn";
 
 const router = createBrowserRouter([
   {
@@ -24,7 +24,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: "/",
-            Component: ForumsPage,
+            Component: SiteIndexPage,
           },
           {
             path: "/register",
@@ -32,15 +32,15 @@ const router = createBrowserRouter([
           },
           {
             path: "/forums",
-            Component: ForumsPage,
+            Component: SiteIndexPage,
           },
           {
             path: "/category/:categoryId/forums/:forumId",
-            Component: CategoryForumPage,
+            Component: ListForumTopics,
           },
           {
             path: "/category/:categoryId/forums/:forumId/topics/:topicId",
-            Component: TopicPage,
+            Component: ViewTopicPage,
           },
           {
             path: "/category/:categoryId/forums/:forumId/topics/:topicId/posts/:postId",
@@ -66,7 +66,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/sign-in",
-        Component: CustomSignIn,
+        Component: SignIn,
       },
     ],
   },

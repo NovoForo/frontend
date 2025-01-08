@@ -17,7 +17,7 @@ import {
   Typography,
 } from "@mui/material";
 
-export default function ForumsPage() {
+export default function SiteIndexPage() {
   const [categories, setCategories] = useState<Category[]>();
   const [error, setError] = useState<string>();
 

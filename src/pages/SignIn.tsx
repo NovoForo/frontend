@@ -29,7 +29,7 @@ async function loginToBackend(email: string, password: string): Promise<Extended
     };
 }
 
-export default function CustomSignIn() {
+export default function SignIn() {
     const [error, setError] = React.useState<string | null>(null);
     const { signIn } = useSession();
     const navigate = useNavigate();

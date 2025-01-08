@@ -15,8 +15,9 @@ import { useSession } from "@toolpad/core";
 import { SetStateAction, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Topic } from "../types";
+import {ExtendedSession} from "../ExtendedSession";
 
-const CategoryForumPage = () => {
+const ListForumTopics = () => {
   const { categoryId, forumId } = useParams();
   const [topics, setTopics] = useState<Topic[]>();
   const [loading, setLoading] = useState(true);
@@ -24,7 +25,7 @@ const CategoryForumPage = () => {
   const [page, setPage] = useState(1); // Current page
   const [totalTopics, setTotalTopics] = useState(0); // Total number of topics
   const [limit] = useState(10); // Number of items per page
-  const session = useSession();
+  const session = useSession() as ExtendedSession | null;
 
   useEffect(() => {
     async function fetchData() {
@@ -197,4 +198,4 @@ const CategoryForumPage = () => {
   );
 };
 
-export default CategoryForumPage;
+export default ListForumTopics;

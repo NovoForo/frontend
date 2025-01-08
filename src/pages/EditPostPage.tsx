@@ -5,12 +5,13 @@ import {
   Container,
   Paper,
   TextField,
-  Typography
+  Typography,
+  Alert,
 } from '@mui/material';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useSession } from '@toolpad/core';
 import { useState, useEffect } from 'react';
-import { ExtendedSession } from './signIn';
+import { ExtendedSession } from "../ExtendedSession";
 
 export default function EditPostPage() {
   const { categoryId, forumId, topicId, postId } = useParams();
@@ -20,123 +21,165 @@ export default function EditPostPage() {
   const [postTitle, setPostTitle] = useState('');
   const [postContent, setPostContent] = useState('');
   const [initialPostFetched, setInitialPostFetched] = useState(false);
+  const [error429, setError429] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [fetchError, setFetchError] = useState<string | null>(null);
 
-  // Basic validation: require all fields to be non-empty
   const isFormValid = postTitle.trim() && postContent.trim();
 
-  const handlePostClick = () => {
-    fetch(
-      import.meta.env.VITE_API_URL +
-        `/s/categories/${categoryId}/forums/${forumId}/topics/${topicId}/posts/${postId}`,
-      {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${session?.token}`,
-        },
-        body: JSON.stringify({
-          title: postTitle,
-          content: postContent,
-        }),
+  const handlePostClick = async () => {
+    try {
+      const resp = await fetch(
+          `${import.meta.env.VITE_API_URL}/s/categories/${categoryId}/forums/${forumId}/topics/${topicId}/posts/${postId}`,
+          {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${session?.token}`,
+            },
+            body: JSON.stringify({
+              title: postTitle,
+              content: postContent,
+            }),
+          }
+      );
+
+      if (resp.status === 429) {
+        setError429(true);
+        setTimeout(() => setError429(false), 10000);
+        return;
       }
-    ).then( async (resp) => {
-      let json = await resp.json();
+
+      if (!resp.ok) {
+        throw new Error(`Failed to update post: ${resp.statusText}`);
+      }
+
       navigate(`/category/${categoryId}/forums/${forumId}/topics/${topicId}`);
-    });
+    } catch (error) {
+      console.error('Error updating post:', error);
+    }
   };
 
   useEffect(() => {
-    if (!session) {
-      navigate('/');
-    }
+    const fetchPost = async () => {
+      if (!session) {
+        navigate('/');
+        return;
+      }
+
+      setLoading(true);
+      setFetchError(null);
+
+      try {
+        const resp = await fetch(
+            `${import.meta.env.VITE_API_URL}/categories/${categoryId}/forums/${forumId}/topics/${topicId}`
+        );
+
+        if (resp.status === 429) {
+          setError429(true);
+          setTimeout(() => setError429(false), 10000);
+          return;
+        }
+
+        if (!resp.ok) {
+          throw new Error(`Failed to fetch post: ${resp.statusText}`);
+        }
+
+        const json = await resp.json();
+        const post = json.posts?.find(
+            (p: { Id: number }) => p.Id === parseInt(postId, 10) // Ensure type matches
+        );
+
+        if (post) {
+          setPostTitle(post.Title || '');
+          setPostContent(post.Content || '');
+        } else {
+          throw new Error('Post not found in response');
+        }
+
+        setInitialPostFetched(true);
+      } catch (error) {
+        console.error('Error fetching post:', error);
+        setFetchError(error instanceof Error ? error.message : 'Unknown error');
+      } finally {
+        setLoading(false);
+      }
+    };
 
     if (!initialPostFetched) {
-      fetch(`${import.meta.env.VITE_API_URL}/categories/${categoryId}/forums/${forumId}/topics/${topicId}`)
-      .then(async (resp) => {
-        if (!resp.ok) {
-          throw new Error(`Network response was not ok: ${resp.status} ${resp.statusText}`);
-        }
-    
-        const json = await resp.json();
-        if (!json || !json.posts) {
-          throw new Error('Invalid response format: posts not found');
-        }
-    
-        const post = await json.posts.find((post: { Id: string | undefined }) => post.Id == postId);
-    
-        if (post) {
-          setPostTitle(post.Title);
-          setPostContent(post.Content);
-        } else {
-          throw new Error('Post not found');
-        }
-      })
-      .catch((error) => {
-        console.error('Error fetching post:', error);
-      });
+      fetchPost();
     }
-
-  }, [session, navigate]);
+  }, [session, initialPostFetched, categoryId, forumId, topicId, postId, navigate]);
 
   return (
-    <>
-      {session && (
-        <Container maxWidth="sm">
-          <Paper elevation={3} sx={{ p: 3, mt: 4 }}>
-            <Typography variant="h5" gutterBottom>
-              Edit Post
-            </Typography>
-            <Box
-              component="form"
-              noValidate
-              autoComplete="off"
-              onSubmit={(e) => {
-                e.preventDefault(); // Prevent default form submission
-                if (isFormValid) {
-                  handlePostClick();
-                }
-              }}
-              sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-            >
-              <TextField
-                required
-                id="topicTitle"
-                label="Title"
-                fullWidth
-                margin="normal"
-                value={postTitle}
-                onChange={(e) => setPostTitle(e.target.value)}
-                error={!postTitle.trim()} // Show red border if empty
-                helperText={
-                  !postTitle.trim() ? 'Please provide a title.' : ''
-                }
-              />
-              <TextField
-                required
-                id="postContent"
-                label="Content"
-                multiline
-                rows={4}
-                fullWidth
-                margin="normal"
-                value={postContent}
-                onChange={(e) => setPostContent(e.target.value)}
-                error={!postContent.trim()}
-                helperText={
-                  !postContent.trim() ? 'Please add some content.' : ''
-                }
-              />
-              <Button
-                type="submit" // Mark the button as the submit button
-                variant="contained"
-                disabled={!isFormValid}
-              >
-                Save Changes
-              </Button>
-            </Box>
-          </Paper>
-        </Container>
-      )}
-    </>
+      <>
+        {session && (
+            <Container maxWidth="sm">
+              {error429 && (
+                  <Alert severity="warning" sx={{ mb: 2 }}>
+                    Too many requests. Please try again in 10 seconds.
+                  </Alert>
+              )}
+              {fetchError && (
+                  <Alert severity="error" sx={{ mb: 2 }}>
+                    {fetchError}
+                  </Alert>
+              )}
+              <Paper elevation={3} sx={{ p: 3, mt: 4 }}>
+                <Typography variant="h5" gutterBottom>
+                  Edit Post
+                </Typography>
+                {loading ? (
+                    <Typography variant="body1">Loading post...</Typography>
+                ) : (
+                    <Box
+                        component="form"
+                        noValidate
+                        autoComplete="off"
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          if (isFormValid) {
+                            handlePostClick();
+                          }
+                        }}
+                        sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+                    >
+                      <TextField
+                          required
+                          id="topicTitle"
+                          label="Title"
+                          fullWidth
+                          margin="normal"
+                          value={postTitle}
+                          onChange={(e) => setPostTitle(e.target.value)}
+                          error={!postTitle.trim()}
+                          helperText={!postTitle.trim() ? 'Please provide a title.' : ''}
+                      />
+                      <TextField
+                          required
+                          id="postContent"
+                          label="Content"
+                          multiline
+                          rows={4}
+                          fullWidth
+                          margin="normal"
+                          value={postContent}
+                          onChange={(e) => setPostContent(e.target.value)}
+                          error={!postContent.trim()}
+                          helperText={!postContent.trim() ? 'Please add some content.' : ''}
+                      />
+                      <Button
+                          type="submit"
+                          variant="contained"
+                          disabled={!isFormValid}
+                      >
+                        Save Changes
+                      </Button>
+                    </Box>
+                )}
+              </Paper>
+            </Container>
+        )}
+      </>
   );
 }

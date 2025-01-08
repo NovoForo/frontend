@@ -8,6 +8,7 @@ export type Post = {
 };
 
 export type User = {
+  Email?: string;
   Username: string;
   IsModerator: boolean;
   IsAdministrator: boolean;
