@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Category, Forum } from "../types";
 import {
   Box,
@@ -14,8 +14,8 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography
-} from '@mui/material';
+  Typography,
+} from "@mui/material";
 
 export default function ForumsPage() {
   const [categories, setCategories] = useState<Category[]>();
@@ -24,7 +24,7 @@ export default function ForumsPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const resp = await fetch(import.meta.env.VITE_API_URL + '/categories');
+        const resp = await fetch(import.meta.env.VITE_API_URL + "/categories");
 
         if (!resp.ok) {
           throw new Error(`Error: ${resp.statusText}`);
@@ -42,72 +42,74 @@ export default function ForumsPage() {
 
   if (error) {
     return (
-        <Box sx={{ p: 2 }}>
-          <Typography color="error">Error: {error}</Typography>
-        </Box>
+      <Box sx={{ p: 2 }}>
+        <Typography color="error">Error: {error}</Typography>
+      </Box>
     );
   }
 
   if (!categories) {
     return (
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-          <CircularProgress />
-        </Box>
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+        <CircularProgress />
+      </Box>
     );
   }
 
   return (
-      <Box sx={{ p: 2 }}>
-        <Typography variant="h4" gutterBottom>
-          Forums
-        </Typography>
+    <Box sx={{ p: 2 }}>
+      <Typography variant="h4" gutterBottom>
+        Forums
+      </Typography>
 
-        {categories.map((category) => (
-            <Card key={category.Id} sx={{ mb: 3 }}>
-              <CardContent>
-                <Typography variant="h5" gutterBottom>
-                  {category.Name}
-                </Typography>
-                <Typography variant="body2" color="text.secondary" gutterBottom>
-                  {category.Description}
-                </Typography>
+      {categories &&
+        categories.map((category) => (
+          <Card key={category.Id} sx={{ mb: 3 }}>
+            <CardContent>
+              <Typography variant="h5" gutterBottom>
+                {category.Name}
+              </Typography>
+              <Typography variant="body2" color="text.secondary" gutterBottom>
+                {category.Description}
+              </Typography>
 
-                <Divider sx={{ my: 2 }} />
+              <Divider sx={{ my: 2 }} />
 
-                {category.Forums && category.Forums.length > 0 ? (
-                    <TableContainer component={Paper}>
-                      <Table size="small" aria-label="forums table">
-                        <TableHead>
-                          <TableRow>
-                            <TableCell sx={{ fontWeight: 'bold' }}>Forum Name</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold' }}>Forum Description</TableCell>
+              {category.Forums && category.Forums.length > 0 ? (
+                <TableContainer component={Paper}>
+                  <Table size="small" aria-label="forums table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell sx={{ fontWeight: "bold" }}>Forum Name</TableCell>
+                        <TableCell sx={{ fontWeight: "bold" }}>Forum Description</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {category.Forums.length > 0 &&
+                        category.Forums.map((forum) => (
+                          <TableRow key={forum.Id}>
+                            <TableCell>
+                              <Link
+                                to={`/category/${category.Id}/forums/${forum.Id}`}
+                                style={{ textDecoration: "none", color: "#1976d2" }}
+                              >
+                                {forum.Name}
+                              </Link>
+                            </TableCell>
+                            <TableCell>{forum.Description}</TableCell>
                           </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {category.Forums.map((forum) => (
-                              <TableRow key={forum.Id}>
-                                <TableCell>
-                                  <Link
-                                      to={`/category/${category.Id}/forums/${forum.Id}`}
-                                      style={{ textDecoration: 'none', color: '#1976d2' }}
-                                  >
-                                    {forum.Name}
-                                  </Link>
-                                </TableCell>
-                                <TableCell>{forum.Description}</TableCell>
-                              </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                ) : (
-                    <Typography variant="body1" color="text.secondary" gutterBottom>
-                      No forums available in this category.
-                    </Typography>
-                )}
-              </CardContent>
-            </Card>
+                        ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              ) : (
+                <Typography variant="body1" color="text.secondary" gutterBottom>
+                  No forums available in this category.
+                </Typography>
+              )}
+            </CardContent>
+          </Card>
         ))}
-      </Box>
+    </Box>
   );
 }

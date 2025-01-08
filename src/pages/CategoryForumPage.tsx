@@ -14,7 +14,7 @@ import {
 import { useSession } from "@toolpad/core";
 import { SetStateAction, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Topic } from "../types"
+import { Topic } from "../types";
 
 const CategoryForumPage = () => {
   const { categoryId, forumId } = useParams();
@@ -30,19 +30,14 @@ const CategoryForumPage = () => {
     async function fetchData() {
       try {
         // Fetch total count
-        const countResp = await fetch(
-          import.meta.env.VITE_API_URL +
-            `/categories/${categoryId}/forums/${forumId}`
-        );
+        const countResp = await fetch(import.meta.env.VITE_API_URL + `/categories/${categoryId}/forums/${forumId}`);
         const countResult = await countResp.json();
         setTotalTopics(countResult.count); // Set the total count of topics
 
         // Fetch topics for the current page
         const resp = await fetch(
           import.meta.env.VITE_API_URL +
-            `/categories/${categoryId}/forums/${forumId}?skip=${
-              (page - 1) * limit
-            }&limit=${limit}`
+            `/categories/${categoryId}/forums/${forumId}?skip=${(page - 1) * limit}&limit=${limit}`
         );
         if (!resp.ok) {
           throw new Error(`Error: ${resp.statusText}`);
@@ -81,53 +76,46 @@ const CategoryForumPage = () => {
     return (
       <Paper elevation={3}>
         {session && (
-        <Box mb={2} textAlign="right">
-          <Link
-            to={`/category/${categoryId}/forums/${forumId}/topics/new`}
-            style={{ textDecoration: "none" }}
-          >
-            <Button variant="contained" color="primary">
-              New Topic
-            </Button>
-          </Link>
-        </Box>
-      )}
-      <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{ fontWeight: "bold" }}>Topic Title</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }} align="center">
-                Statistics
-              </TableCell>
-              <TableCell sx={{ fontWeight: "bold" }} align="center">
-                Last Reply
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
+          <Box mb={2} textAlign="right">
+            <Link to={`/category/${categoryId}/forums/${forumId}/topics/new`} style={{ textDecoration: "none" }}>
+              <Button variant="contained" color="primary">
+                New Topic
+              </Button>
+            </Link>
+          </Box>
+        )}
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ fontWeight: "bold" }}>Topic Title</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }} align="center">
+                  Statistics
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold" }} align="center">
+                  Last Reply
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
               <TableRow>
                 <TableCell colSpan={3}>
                   <Typography variant="body1">
-                    There are no topics in the forum yet. Start a new
-                    discussion to get things going!
+                    There are no topics in the forum yet. Start a new discussion to get things going!
                   </Typography>
                 </TableCell>
               </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Paper>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
     );
 
   return (
     <Box sx={{ mt: 4, px: 2 }}>
       {session && (
         <Box mb={2} textAlign="right">
-          <Link
-            to={`/category/${categoryId}/forums/${forumId}/topics/new`}
-            style={{ textDecoration: "none" }}
-          >
+          <Link to={`/category/${categoryId}/forums/${forumId}/topics/new`} style={{ textDecoration: "none" }}>
             <Button variant="contained" color="primary">
               New Topic
             </Button>
@@ -154,50 +142,44 @@ const CategoryForumPage = () => {
                 <TableRow>
                   <TableCell colSpan={3}>
                     <Typography variant="body1">
-                      There are no topics in the forum yet. Start a new
-                      discussion to get things going!
+                      There are no topics in the forum yet. Start a new discussion to get things going!
                     </Typography>
                   </TableCell>
                 </TableRow>
               )}
-              {topics.length > 0 && topics.map((topic) => (
-                <TableRow
-                  key={topic.Id}
-                  hover
-                  sx={{
-                    "&:last-child td, &:last-child th": { border: 0 },
-                  }}
-                >
-                  <TableCell>
-                    <Link
-                      to={`/category/${categoryId}/forums/${forumId}/topics/${topic.Id}`}
-                      style={{ textDecoration: "none", color: "inherit" }}
-                    >
-                      <Typography variant="subtitle1">{topic.Title}</Typography>
-                    </Link>
-                    <Typography variant="caption">
-                      Posted on:{" "}
-                      {new Date(topic.CreatedAt).toLocaleString()}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Typography variant="body2" color="text.secondary">
-                      {topic.Posts.length - 1} Replies
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Typography variant="body2" color="text.secondary">
-                      <Link to="/" style={{ textDecoration: "none" }}>
-                        {topic.Posts[topic.Posts.length - 1].User.Username}
-                      </Link>{" "}
-                      replied at:{" "}
-                      {new Date(
-                        topic.Posts[topic.Posts.length - 1].CreatedAt
-                      ).toLocaleString()}
-                    </Typography>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {topics.length > 0 &&
+                topics.map((topic) => (
+                  <TableRow
+                    key={topic.Id}
+                    hover
+                    sx={{
+                      "&:last-child td, &:last-child th": { border: 0 },
+                    }}
+                  >
+                    <TableCell>
+                      <Link
+                        to={`/category/${categoryId}/forums/${forumId}/topics/${topic.Id}`}
+                        style={{ textDecoration: "none", color: "inherit" }}
+                      >
+                        <Typography variant="subtitle1">{topic.Title}</Typography>
+                      </Link>
+                      <Typography variant="caption">Posted on: {new Date(topic.CreatedAt).toLocaleString()}</Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Typography variant="body2" color="text.secondary">
+                        {topic.Posts.length - 1} Replies
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Typography variant="body2" color="text.secondary">
+                        <Link to="/" style={{ textDecoration: "none" }}>
+                          {topic.Posts[topic.Posts.length - 1].User.Username}
+                        </Link>{" "}
+                        replied at: {new Date(topic.Posts[topic.Posts.length - 1].CreatedAt).toLocaleString()}
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>

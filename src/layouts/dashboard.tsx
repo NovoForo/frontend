@@ -1,10 +1,10 @@
-import * as React from 'react';
-import { Outlet, Navigate, useLocation } from 'react-router-dom';
-import { DashboardLayout } from '@toolpad/core/DashboardLayout';
-import { PageContainer } from '@toolpad/core/PageContainer';
-import { useSession } from '../SessionContext';
-import { match } from 'path-to-regexp';
-import { Stack, Typography } from '@mui/material';
+import * as React from "react";
+import { Outlet, Navigate, useLocation } from "react-router-dom";
+import { DashboardLayout } from "@toolpad/core/DashboardLayout";
+import { PageContainer } from "@toolpad/core/PageContainer";
+import { useSession } from "../SessionContext";
+import { match } from "path-to-regexp";
+import { Stack, Typography } from "@mui/material";
 
 export default function Layout() {
   const { session } = useSession();
@@ -12,13 +12,13 @@ export default function Layout() {
 
   if (!session) {
     const skippedUrls = [
-      '/',
-      '/register',
-      '/rules',
-      '/forums',
-      '/category/:categoryId/forums/:forumId',
-      '/category/:categoryId/forums/:forumId/topics/:topicId',
-      '/category/:categoryId/forums/:forumId/topics/:topicId/posts/:postId',
+      "/",
+      "/register",
+      "/rules",
+      "/forums",
+      "/category/:categoryId/forums/:forumId",
+      "/category/:categoryId/forums/:forumId/topics/:topicId",
+      "/category/:categoryId/forums/:forumId/topics/:topicId/posts/:postId",
     ];
 
     const isSkippedUrl = (path: string) => {
@@ -41,7 +41,9 @@ export default function Layout() {
       <PageContainer title={""}>
         <Outlet />
         <Stack alignItems="center">
-          <Typography>Powered by <a href="https://github.com/NovoForo">NovoForo</a></Typography>
+          <Typography>
+            Powered by <a href="https://github.com/NovoForo">NovoForo</a>
+          </Typography>
         </Stack>
       </PageContainer>
     </DashboardLayout>

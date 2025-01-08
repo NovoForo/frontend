@@ -1,17 +1,17 @@
 export type Post = {
-    Id: number,
-    Title: string,
-    User: User,
-    CreatedAt: string,
-    Content: string,
-    Topic: Topic
-}
-  
+  Id: number;
+  Title: string;
+  User: User;
+  CreatedAt: string;
+  Content: string;
+  Topic: Topic;
+};
+
 export type User = {
-    Username: string
-    IsModerator: boolean,
-    IsAdministrator: boolean
-}
+  Username: string;
+  IsModerator: boolean;
+  IsAdministrator: boolean;
+};
 
 export type Category = {
   Id: number;
@@ -27,12 +27,11 @@ export type Forum = {
 };
 
 export type Topic = {
-  Id: number,
-  ForumId: number,
-  Title: string,
-  Description: string,
-  CreatedAt: string,
-  UpdatedAt: string,
-  Posts: Post[]
-}
-
+  Id: number;
+  ForumId: number;
+  Title: string;
+  Description: string;
+  CreatedAt: string;
+  UpdatedAt: string;
+  Posts: Post[];
+};
