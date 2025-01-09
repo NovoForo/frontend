@@ -77,7 +77,7 @@ export default function SiteIndexPage() {
 
               {category.Forums && category.Forums.length > 0 ? (
                 <TableContainer component={Paper}>
-                  <Table size="small" aria-label="forums table">
+                  <Table aria-label="forums table">
                     <TableHead>
                       <TableRow>
                         <TableCell sx={{ fontWeight: "bold" }}>Forum Name</TableCell>
@@ -87,13 +87,19 @@ export default function SiteIndexPage() {
                     <TableBody>
                       {category.Forums.length > 0 &&
                         category.Forums.map((forum) => (
-                          <TableRow key={forum.Id}>
+                          <TableRow
+                            key={forum.Id}
+                            hover
+                            sx={{
+                              "&:last-child td, &:last-child th": { border: 0 },
+                            }}
+                          >
                             <TableCell>
                               <Link
                                 to={`/category/${category.Id}/forums/${forum.Id}`}
-                                style={{ textDecoration: "none", color: "#1976d2" }}
+                                style={{ textDecoration: "none", color: "inherit" }}
                               >
-                                {forum.Name}
+                                <Typography variant="subtitle1">{forum.Name}</Typography>
                               </Link>
                             </TableCell>
                             <TableCell>{forum.Description}</TableCell>
