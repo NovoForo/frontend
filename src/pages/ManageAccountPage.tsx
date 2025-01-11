@@ -106,7 +106,7 @@ export default function ManageAccountPage() {
             setDisplayName(json.user.Username || '');
             setEmail(json.user.EmailAddress || '');
           } else {
-            setError('Failed to fetch user credentials. Please try again later.');
+            setError("Failed to fetch user credentials. Please try again later.");
           }
         })
         .catch((error) => {
