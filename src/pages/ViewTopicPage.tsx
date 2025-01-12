@@ -149,6 +149,8 @@ const ViewTopicPage = () => {
                             Authorization: `Bearer ${(session as ExtendedSession).token}`,
                           },
                           body: JSON.stringify({ content: replyContent }),
+                        }).then((resp: any) => resp.text()).then(() => {
+                          location.reload();
                         }
                     );
                   }}>
