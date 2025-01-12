@@ -132,8 +132,28 @@ const ViewTopicPage = () => {
               </Typography>
 
               {/* Post Actions */}
+              {!session && (
+                  <Button disabled="true" variant="outlined" color="primary" size="small">
+                    {post.LikeCount} Likes
+                  </Button>
+              )}
               {session && session.user?.name === post.User.Username && (
                 <Stack direction="row" spacing={1} sx={{ marginTop: "1rem" }}>
+                  <Button variant="outlined" color="primary" size="small" onClick={async () => {
+                    await fetch(
+                        import.meta.env.VITE_API_URL + `/categories/${categoryId}/forums/${forumId}/topics/${topicId}/posts/${post.Id}/like`,
+                        {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${(session as ExtendedSession).token}`,
+                          },
+                          body: JSON.stringify({ content: replyContent }),
+                        }
+                    );
+                  }}>
+                    {post.LikeCount} Likes
+                  </Button>
                   <Button variant="outlined" color="secondary" size="small">
                     <Link to={`/category/${categoryId}/forums/${forumId}/topics/${topicId}/posts/${post.Id}`}>
                       Edit

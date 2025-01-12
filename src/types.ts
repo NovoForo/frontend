@@ -5,6 +5,7 @@ export type Post = {
   CreatedAt: string;
   Content: string;
   Topic: Topic;
+  LikeCount: number;
 };
 
 export type User = {
