@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ExtendedSession } from "../ExtendedSession";
 import { Post } from "../types";
+import Markdown from 'react-markdown'
 
 const ViewTopicPage = () => {
   const { categoryId, forumId, topicId } = useParams();
@@ -127,7 +128,7 @@ const ViewTopicPage = () => {
                 {new Date(post.CreatedAt).toLocaleString()}
               </Typography>
               <Typography variant="body1" sx={{ marginTop: "0.5rem" }}>
-                {post.Content}
+                <Markdown>{post.Content}</Markdown>
               </Typography>
 
               {/* Post Actions */}
