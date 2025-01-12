@@ -124,7 +124,7 @@ const ViewTopicPage = () => {
             {/* Post Content */}
             <Box sx={{ flex: 1, padding: "1rem" }}>
               <Typography variant="caption" color="text.secondary">
-                {new Date(post.CreatedAt).toLocaleString()} | {post.Title}
+                {new Date(post.CreatedAt).toLocaleString()}
               </Typography>
               <Typography variant="body1" sx={{ marginTop: "0.5rem" }}>
                 {post.Content}

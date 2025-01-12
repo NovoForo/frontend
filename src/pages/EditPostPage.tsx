@@ -18,14 +18,13 @@ export default function EditPostPage() {
   const session = useSession() as ExtendedSession | null;
   const navigate = useNavigate();
 
-  const [postTitle, setPostTitle] = useState('');
   const [postContent, setPostContent] = useState('');
   const [initialPostFetched, setInitialPostFetched] = useState(false);
   const [error429, setError429] = useState(false);
   const [loading, setLoading] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
 
-  const isFormValid = postTitle.trim() && postContent.trim();
+  const isFormValid = postContent.trim();
 
   const handlePostClick = async () => {
     try {
@@ -38,7 +37,6 @@ export default function EditPostPage() {
               Authorization: `Bearer ${session?.token}`,
             },
             body: JSON.stringify({
-              title: postTitle,
               content: postContent,
             }),
           }
@@ -91,7 +89,6 @@ export default function EditPostPage() {
         );
 
         if (post) {
-          setPostTitle(post.Title || '');
           setPostContent(post.Content || '');
         } else {
           throw new Error('Post not found in response');
@@ -144,17 +141,6 @@ export default function EditPostPage() {
                         }}
                         sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
                     >
-                      <TextField
-                          required
-                          id="topicTitle"
-                          label="Title"
-                          fullWidth
-                          margin="normal"
-                          value={postTitle}
-                          onChange={(e) => setPostTitle(e.target.value)}
-                          error={!postTitle.trim()}
-                          helperText={!postTitle.trim() ? 'Please provide a title.' : ''}
-                      />
                       <TextField
                           required
                           id="postContent"

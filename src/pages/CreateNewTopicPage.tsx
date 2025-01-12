@@ -20,12 +20,11 @@ export default function NewTopicsPage() {
   const navigate = useNavigate();
 
   const [topicTitle, setTopicTitle] = useState('');
-  const [topicDescription, setTopicDescription] = useState('');
   const [postContent, setPostContent] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [showAlert, setShowAlert] = useState(false);
 
-  const isFormValid = topicTitle.trim() && topicDescription.trim() && postContent.trim();
+  const isFormValid = topicTitle.trim() && postContent.trim();
 
   const handlePostClick = async () => {
     try {
@@ -40,7 +39,6 @@ export default function NewTopicsPage() {
             },
             body: JSON.stringify({
               title: topicTitle,
-              description: topicDescription,
               content: postContent,
             }),
           }
@@ -100,19 +98,6 @@ export default function NewTopicsPage() {
                       onChange={(e) => setTopicTitle(e.target.value)}
                       error={!topicTitle.trim()}
                       helperText={!topicTitle.trim() ? 'Please provide a title.' : ''}
-                  />
-                  <TextField
-                      required
-                      id="topicDescription"
-                      label="Description"
-                      fullWidth
-                      margin="normal"
-                      value={topicDescription}
-                      onChange={(e) => setTopicDescription(e.target.value)}
-                      error={!topicDescription.trim()}
-                      helperText={
-                        !topicDescription.trim() ? 'Please provide a description.' : ''
-                      }
                   />
                   <TextField
                       required
