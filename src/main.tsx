@@ -12,6 +12,7 @@ import NewTopicsPage from "./pages/CreateNewTopicPage";
 import SignUp from "./pages/SignUp";
 import EditPostPage from "./pages/EditPostPage";
 import AdministratorControlPanelPage from "./pages/AdministratorControlPanelPage";
+import ModeratorControlPanelPage from "./pages/ModeratorControlPanelPage";
 import SignIn from "./pages/SignIn";
 
 const router = createBrowserRouter([
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
           {
             path: "/administratorcontrolpanel",
             Component: AdministratorControlPanelPage,
+          },
+          {
+            path: "/moderatorcontrolpanel",
+            Component: ModeratorControlPanelPage,
           },
           {
             path: "/rules",
