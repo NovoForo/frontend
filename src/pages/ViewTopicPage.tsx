@@ -216,6 +216,44 @@ const ViewTopicPage = () => {
                   >
                     Delete
                   </Button>
+
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    size="small"
+                    onClick={async () => {
+                      try {
+                        const resp = await fetch(
+                          import.meta.env.VITE_API_URL +
+                            `/categories/${categoryId}/forums/${forumId}/topics/${topicId}/posts/${post.Id}/flag`,
+                          {
+                            method: "POST",
+                            headers: {
+                              "Content-Type": "application/json",
+                              Authorization: `Bearer ${(session as ExtendedSession).token}`,
+                            },
+                          }
+                        );
+
+                        if (resp.status === 429) {
+                          const retryAfterHeader = resp.headers.get("Retry-After");
+                          setRetryAfter(retryAfterHeader ? parseInt(retryAfterHeader, 10) : 10);
+                          throw new Error("Too many requests. Please try again later.");
+                        }
+
+                        const response = await resp.text()
+                        if (!resp.ok) {
+                          window.alert(`Error: ${response}`);
+                        } else {
+                          window.alert("Post has been flagged for review by forum moderators!")
+                        }
+                      } catch (err: any) {
+                        setError(err.message);
+                      }
+                    }}
+                  >
+                    Flag Post For Moderator Review
+                  </Button>
                 </Stack>
               )}
             </Box>
