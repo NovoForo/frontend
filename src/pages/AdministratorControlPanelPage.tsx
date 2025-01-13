@@ -74,8 +74,8 @@ const AdministratorControlPanelPage = () => {
         Authorization: `Bearer ${session?.token}`,
       },
       body: JSON.stringify({
-        "name": newForum.name,
-        "description": newForum.description,
+        name: newForum.name,
+        description: newForum.description,
       }),
     })
       .then((response) => {
@@ -124,7 +124,7 @@ const AdministratorControlPanelPage = () => {
       alignItems="center"
       minHeight="100vh"
       sx={{
-        backgroundColor: "#f3f3f3",
+        // backgroundColor: "#f3f3f3",
         padding: 2,
       }}
     >
