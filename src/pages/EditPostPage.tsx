@@ -154,6 +154,33 @@ export default function EditPostPage() {
                           error={!postContent.trim()}
                           helperText={!postContent.trim() ? 'Please add some content.' : ''}
                       />
+                      <Typography variant="body2" color="textSecondary" sx={{ mt: 2 }}>
+                        You can format your content using Markdown. Here are some examples:
+                        <ul>
+                          <li>
+                            <strong>Bold:</strong> <code>**bold text**</code> → <strong>bold text</strong>
+                          </li>
+                          <li>
+                            <strong>Italic:</strong> <code>*italic text*</code> → <em>italic text</em>
+                          </li>
+                          <li>
+                            <strong>Link:</strong> <code>[link text](https://example.com)</code> →{" "}
+                            <a href="https://example.com" target="_blank" rel="noopener noreferrer">
+                              link text
+                            </a>
+                          </li>
+                          <li>
+                            <strong>List:</strong> <code>- Item 1</code> → - Item 1
+                          </li>
+                          <li>
+                            <strong>Code:</strong> <code>`inline code`</code> → <code>inline code</code>
+                          </li>
+                        </ul>
+                        For more details, check out the{" "}
+                        <a href="https://www.markdownguide.org/" target="_blank" rel="noopener noreferrer">
+                          Markdown Guide
+                        </a>.
+                      </Typography>
                       <Button
                           type="submit"
                           variant="contained"
