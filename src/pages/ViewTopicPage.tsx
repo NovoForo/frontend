@@ -18,7 +18,7 @@ const ViewTopicPage = () => {
   const limit = 10;
   const session = useSession() as ExtendedSession | null;
   const navigate = useNavigate();
-
+  
   const fetchPosts = async (currentPage: number) => {
     try {
       setLoading(true);
@@ -28,6 +28,19 @@ const ViewTopicPage = () => {
         import.meta.env.VITE_API_URL +
           `/categories/${categoryId}/forums/${forumId}/topics/${topicId}?skip=${skip}&limit=${limit}`
       );
+
+      if (session) {
+        await fetch(
+          import.meta.env.VITE_API_URL +
+            `/categories/${categoryId}/forums/${forumId}/topics/${topicId}?skip=${skip}&limit=${limit}`,
+              {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${session?.token}`,
+                }}
+        );
+      }
 
       if (resp.status === 429) {
         const retryAfterHeader = resp.headers.get("Retry-After");

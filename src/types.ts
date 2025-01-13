@@ -36,4 +36,5 @@ export type Topic = {
   CreatedAt: string;
   UpdatedAt: string;
   Posts: Post[];
+  Views: Number,
 };

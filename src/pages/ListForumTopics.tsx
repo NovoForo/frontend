@@ -168,6 +168,8 @@ const ListForumTopics = () => {
                     </TableCell>
                     <TableCell align="center">
                       <Typography variant="body2" color="text.secondary">
+                        {topic.Views} Views
+                        <br />
                         {topic.Posts.length - 1} Replies
                       </Typography>
                     </TableCell>
