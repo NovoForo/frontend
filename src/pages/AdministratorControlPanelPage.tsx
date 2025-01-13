@@ -124,7 +124,7 @@ const AdministratorControlPanelPage = () => {
       alignItems="center"
       minHeight="100vh"
       sx={{
-        // backgroundColor: "#f3f3f3",
+        backgroundColor: "background.paper",
         padding: 2,
       }}
     >
