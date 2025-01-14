@@ -37,6 +37,8 @@ function ModeratorControlPanelPage() {
     
     const [topics, setTopicsForReview] = React.useState([]);
     const [posts, setPostsForReview] = React.useState([]);
+    const [flags, setFlags] = React.useState([]);
+
     React.useEffect(() => {
         const fetchModerationQueue = async () => {
             await fetch(import.meta.env.VITE_API_URL + `/moderator/queue`,
@@ -48,6 +50,7 @@ function ModeratorControlPanelPage() {
                 }).then((resp) => resp.json()).then((json) => {
                     setTopicsForReview(json.topics);
                     setPostsForReview(json.posts);
+                    setFlags(json.flags);
                 });
         };
         fetchModerationQueue();
@@ -87,9 +90,9 @@ function ModeratorControlPanelPage() {
                 <CustomTabPanel value={value} index={0}>
                         <section>
                             <h2>Topics for Review</h2>
-                            {topics && topics.results && topics.results.length > 0 ? (
+                            {topics && topics && topics.length > 0 ? (
                             <ul>
-                                {topics.results.map((topic) => (
+                                {topics.map((topic) => (
                                 <li key={topic.Id}>
                                     <Button color="error" onClick={async () => {
                                         const confirm = window.confirm("Are you sure you want to release this topic?")
@@ -131,9 +134,9 @@ function ModeratorControlPanelPage() {
                         </section>
                         <section>
                             <h2>Posts for Review</h2>
-                            {posts && posts.results && posts.results.length > 0 ? (
+                            {posts && posts && posts.length > 0 ? (
                             <ul>
-                                {posts.results.map((post) => (
+                                {posts.map((post) => (
                                 <li key={post.Id}>
                                     <Button color="error" onClick={async () => {
                                         const confirm = window.confirm("Are you sure you want to release this post?")
@@ -175,7 +178,46 @@ function ModeratorControlPanelPage() {
                     </section>
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={1}>
-                Review Post Flags
+                {flags && flags.length > 0 ? (
+                            <ul>
+                                {flags.map((flag) => (
+                                <li key={flag.Id}>
+                                    <Button onClick={async () => {
+                                        const confirm = window.confirm("Are you sure you want to delete this flag?")
+                                        if (confirm) {
+                                            await fetch(import.meta.env.VITE_API_URL + `/moderator/posts/${post.Id}/flag`,
+                                                {
+                                                    method: "DELETE",
+                                                    headers: {
+                                                        "Content-Type": "application/json",
+                                                        'Authorization': `Bearer ${session?.token}`,
+                                                    }
+                                                }).then(() => (
+                                                    location.reload()
+                                                ));
+                                    }}}>Delete Flag</Button>
+
+                                    <Button onClick={async () => {
+                                        const confirm = window.confirm("Are you sure you want to delete this post?")
+                                        if (confirm) {
+                                            await fetch(import.meta.env.VITE_API_URL + `/moderator/posts/${post.Id}`,
+                                                {
+                                                    method: "DELETE",
+                                                    headers: {
+                                                        "Content-Type": "application/json",
+                                                        'Authorization': `Bearer ${session?.token}`,
+                                                    }
+                                                }).then(() => (
+                                                    location.reload()
+                                                ));
+                                    }}}>Delete Post</Button>
+                                    {flag.Post.Content}
+                                </li>
+                                ))}
+                            </ul>
+                            ) : (
+                            <p>No flags available for review.</p>
+                            )}
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={2}>
                 Ban User
