@@ -105,7 +105,23 @@ function ModeratorControlPanelPage() {
                                                     location.reload();
                                                 })
                                         }
-                                    }}>Release Topic</Button> <strong>{topic.Title}</strong>
+                                    }}>Release Topic</Button>
+                                    <Button color="error" onClick={async () => {
+                                        const confirm = window.confirm("Are you sure you want to delete this topic?")
+                                        if (confirm) {
+                                            await fetch(import.meta.env.VITE_API_URL + `/moderator/topics/${topic.Id}`,
+                                                {
+                                                    method: "DELETE",
+                                                    headers: {
+                                                        "Content-Type": "application/json",
+                                                        'Authorization': `Bearer ${session?.token}`,
+                                                    }
+                                                }).then(() => {
+                                                    location.reload();
+                                                })
+                                        }
+                                    }}>Delete Topic</Button>
+                                    <strong>{topic.Title}</strong>
                                 </li>
                                 ))}
                             </ul>
@@ -133,7 +149,23 @@ function ModeratorControlPanelPage() {
                                                     location.reload()
                                                 ));
                                         }
-                                    }}>Release Post</Button> {post.Content}
+                                    }}>Release Post</Button>
+                                    <Button color="error" onClick={async () => {
+                                        const confirm = window.confirm("Are you sure you want to release this topic?")
+                                        if (confirm) {
+                                            await fetch(import.meta.env.VITE_API_URL + `/moderator/posts/${post.Id}`,
+                                                {
+                                                    method: "DELETE",
+                                                    headers: {
+                                                        "Content-Type": "application/json",
+                                                        'Authorization': `Bearer ${session?.token}`,
+                                                    }
+                                                }).then(() => {
+                                                    location.reload();
+                                                })
+                                        }
+                                    }}>Delete Post</Button>
+                                    {post.Content}
                                 </li>
                                 ))}
                             </ul>
