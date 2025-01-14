@@ -185,7 +185,7 @@ function ModeratorControlPanelPage() {
                                     <Button onClick={async () => {
                                         const confirm = window.confirm("Are you sure you want to delete this flag?")
                                         if (confirm) {
-                                            await fetch(import.meta.env.VITE_API_URL + `/moderator/posts/${post.Id}/flag`,
+                                            await fetch(import.meta.env.VITE_API_URL + `/moderator/posts/${flag.PostId}/flag`,
                                                 {
                                                     method: "DELETE",
                                                     headers: {

@@ -5,6 +5,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { ExtendedSession } from "../ExtendedSession";
 import { Post } from "../types";
 import Markdown from 'react-markdown'
+import LikeDislikeButton from "../Buttons/LikeDislikeButton";
 
 const ViewTopicPage = () => {
   const { categoryId, forumId, topicId } = useParams();
@@ -146,29 +147,26 @@ const ViewTopicPage = () => {
 
               {/* Post Actions */}
               {!session && (
-                  <Button disabled="true" variant="outlined" color="primary" size="small">
-                    {post.LikeCount} Likes
-                  </Button>
+                  <LikeDislikeButton
+                  categoryId="123"
+                  forumId="456"
+                  topicId="789"
+                  post={{ Id: "1", LikeCount: post.LikeCount, LikeStatus: "none" }}
               )}
               {session && session.user?.name === post.User.Username && (
                 <Stack direction="row" spacing={1} sx={{ marginTop: "1rem" }}>
-                  <Button variant="outlined" color="primary" size="small" onClick={async () => {
-                    await fetch(
-                        import.meta.env.VITE_API_URL + `/categories/${categoryId}/forums/${forumId}/topics/${topicId}/posts/${post.Id}/like`,
-                        {
-                          method: "POST",
-                          headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${(session as ExtendedSession).token}`,
-                          },
-                          body: JSON.stringify({ content: replyContent }),
-                        }).then((resp: any) => resp.text()).then(() => {
-                          location.reload();
-                        }
-                    );
-                  }}>
-                    {post.LikeCount} Likes
-                  </Button>
+                  <LikeDislikeButton
+                    categoryId="123"
+                    forumId="456"
+                    topicId="789"
+                    post={{ 
+                      id: post.Id, 
+                      likeCount: post.LikeCount,   // lowercase "l"
+                      likeStatus: "liked" // lowercase "s"
+                    }} 
+                    session={{ token: "your-auth-token" }}
+                  />
+
                   <Button variant="outlined" color="secondary" size="small">
                     <Link to={`/category/${categoryId}/forums/${forumId}/topics/${topicId}/posts/${post.Id}`}>
                       Edit
