@@ -91,7 +91,21 @@ function ModeratorControlPanelPage() {
                             <ul>
                                 {topics.results.map((topic) => (
                                 <li key={topic.Id}>
-                                    <Button color="error">Release Topic</Button> <strong>{topic.Title}</strong>
+                                    <Button color="error" onClick={async () => {
+                                        const confirm = window.confirm("Are you sure you want to release this topic?")
+                                        if (confirm) {
+                                            await fetch(import.meta.env.VITE_API_URL + `/moderator/topics/${topic.Id}/release`,
+                                                {
+                                                    method: "PATCH",
+                                                    headers: {
+                                                        "Content-Type": "application/json",
+                                                        'Authorization': `Bearer ${session?.token}`,
+                                                    }
+                                                }).then(() => {
+                                                    location.reload();
+                                                })
+                                        }
+                                    }}>Release Topic</Button> <strong>{topic.Title}</strong>
                                 </li>
                                 ))}
                             </ul>
@@ -105,7 +119,21 @@ function ModeratorControlPanelPage() {
                             <ul>
                                 {posts.results.map((post) => (
                                 <li key={post.Id}>
-                                    <Button color="error">Release Post</Button> {post.Content}
+                                    <Button color="error" onClick={async () => {
+                                        const confirm = window.confirm("Are you sure you want to release this post?")
+                                        if (confirm) {
+                                            await fetch(import.meta.env.VITE_API_URL + `/moderator/posts/${post.Id}/release`,
+                                                {
+                                                    method: "PATCH",
+                                                    headers: {
+                                                        "Content-Type": "application/json",
+                                                        'Authorization': `Bearer ${session?.token}`,
+                                                    }
+                                                }).then(() => (
+                                                    location.reload()
+                                                ));
+                                        }
+                                    }}>Release Post</Button> {post.Content}
                                 </li>
                                 ))}
                             </ul>
