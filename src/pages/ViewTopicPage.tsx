@@ -147,11 +147,12 @@ const ViewTopicPage = () => {
 
               {/* Post Actions */}
               {!session && (
-                  <LikeDislikeButton
+                <LikeDislikeButton
                   categoryId="123"
                   forumId="456"
                   topicId="789"
-                  post={{ Id: "1", LikeCount: post.LikeCount, LikeStatus: "none" }}
+                  post={{ id: String(post.Id), LikeCount: post.LikeCount, LikeStatus: "none" }}
+                />
               )}
               {session && session.user?.name === post.User.Username && (
                 <Stack direction="row" spacing={1} sx={{ marginTop: "1rem" }}>
@@ -160,7 +161,7 @@ const ViewTopicPage = () => {
                     forumId="456"
                     topicId="789"
                     post={{ 
-                      id: post.Id, 
+                      id: String(post.Id), 
                       likeCount: post.LikeCount,   // lowercase "l"
                       likeStatus: "liked" // lowercase "s"
                     }} 
