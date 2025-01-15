@@ -6,13 +6,16 @@ import { ExtendedSession } from "../ExtendedSession";
 import { Post } from "../types";
 import Markdown from 'react-markdown'
 import LikeDislikeButton from "../Buttons/LikeDislikeButton";
+import EditPostButton from "../Buttons/EditPostButton";
+import DeletePostButton from "../Buttons/DeletePostButton";
+import FlagPostButton from "../Buttons/FlagPostButton";
+import ReplyToPostForm from "../forms/ReplyToPostForm";
 
 const ViewTopicPage = () => {
   const { categoryId, forumId, topicId } = useParams();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [replyContent, setReplyContent] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [retryAfter, setRetryAfter] = useState<number | null>(null);
@@ -69,36 +72,7 @@ const ViewTopicPage = () => {
     }
   };
 
-  const handlePostClick = async () => {
-    try {
-      const resp = await fetch(
-        import.meta.env.VITE_API_URL + `/s/categories/${categoryId}/forums/${forumId}/topics/${topicId}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${(session as ExtendedSession).token}`,
-          },
-          body: JSON.stringify({ content: replyContent }),
-        }
-      );
-
-      if (resp.status === 429) {
-        const retryAfterHeader = resp.headers.get("Retry-After");
-        setRetryAfter(retryAfterHeader ? parseInt(retryAfterHeader, 10) : 10);
-        throw new Error("Too many requests. Please try again later.");
-      }
-
-      if (!resp.ok) {
-        throw new Error(`Error: ${resp.statusText}`);
-      }
-
-      setReplyContent("");
-      await fetchPosts(page);
-    } catch (err: any) {
-      setError(err.message);
-    }
-  };
+  
 
   useEffect(() => {
     fetchPosts(page);
@@ -174,117 +148,28 @@ const ViewTopicPage = () => {
                     session={{ token: session.token }}
                   />
 
-                  <Button
-                    variant="outlined"
-                    color="secondary"
-                    size="small"
-                    component={Link}
-                    to={`/category/${categoryId}/forums/${forumId}/topics/${topicId}/posts/${post.Id}`}
-                    sx={{
-                      textTransform: "none",
-                      padding: "4px 12px",
-                      '&:hover': {
-                        borderColor: 'secondary.main',
-                        backgroundColor: 'secondary.light',
-                      },
-                    }}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    size="small"
-                    onClick={async () => {
-                      const confirmDelete = window.confirm("Are you sure you want to delete this post?");
-                      if (!confirmDelete) return;
+                  <EditPostButton
+                          categoryId={categoryId}
+                          forumId={forumId}
+                          topicId={topicId}
+                          postId={post.Id}
+                        />
 
-                      try {
-                        const response = await fetch(
-                          `${import.meta.env.VITE_API_URL}/s/categories/${categoryId}/forums/${forumId}/topics/${topicId}/posts/${post.Id}`,
-                          {
-                            method: "DELETE",
-                            headers: {
-                              "Content-Type": "application/json",
-                              Authorization: `Bearer ${(session as ExtendedSession).token}`,
-                            },
-                          }
-                        );
+                  <DeletePostButton
+                    categoryId={categoryId}
+                    forumId={forumId}
+                    topicId={topicId}
+                    postId={post.Id}
+                    token={session.token}
+                  />
 
-                        if (response.status === 429) {
-                          const retryAfterHeader = response.headers.get("Retry-After");
-                          setRetryAfter(retryAfterHeader ? parseInt(retryAfterHeader, 10) : 10);
-                          throw new Error("Too many requests. Please try again later.");
-                        }
-
-                        if (!response.ok) {
-                          throw new Error(`Error: ${response.statusText}`);
-                        }
-
-                        const success = await response.json();
-                        if (success) {
-                          navigate("/");
-                        }
-                      } catch (error) {
-                        setError(error.message);
-                      }
-                    }}
-                    sx={{
-                      textTransform: "none",
-                      padding: "4px 12px",
-                      '&:hover': {
-                        borderColor: 'error.main',
-                        backgroundColor: 'error.light',
-                      },
-                    }}
-                  >
-                    Delete
-                  </Button>
-
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    size="small"
-                    onClick={async () => {
-                      try {
-                        const response = await fetch(
-                          `${import.meta.env.VITE_API_URL}/categories/${categoryId}/forums/${forumId}/topics/${topicId}/posts/${post.Id}/flag`,
-                          {
-                            method: "POST",
-                            headers: {
-                              "Content-Type": "application/json",
-                              Authorization: `Bearer ${(session as ExtendedSession).token}`,
-                            },
-                          }
-                        );
-
-                        if (response.status === 429) {
-                          const retryAfterHeader = response.headers.get("Retry-After");
-                          setRetryAfter(retryAfterHeader ? parseInt(retryAfterHeader, 10) : 10);
-                          throw new Error("Too many requests. Please try again later.");
-                        }
-
-                        const responseText = await response.text();
-                        if (!response.ok) {
-                          window.alert(`Error: ${responseText}`);
-                        } else {
-                          window.alert("Post has been flagged for review by forum moderators!");
-                        }
-                      } catch (error) {
-                        setError(error.message);
-                      }
-                    }}
-                    sx={{
-                      textTransform: "none",
-                      padding: "4px 12px",
-                      '&:hover': {
-                        borderColor: 'error.main',
-                        backgroundColor: 'error.light',
-                      },
-                    }}
-                  >
-                    Flag Post
-                  </Button>
+                  <FlagPostButton
+                    categoryId={categoryId}
+                    forumId={forumId}
+                    topicId={topicId}
+                    postId={post.Id}
+                    session={session}
+                  />
                 </Stack>
               )}
             </Box>
@@ -298,59 +183,16 @@ const ViewTopicPage = () => {
 
       {/* Reply Section */}
       {session && (
-        <Box
-          component="form"
-          noValidate
-          autoComplete="off"
-          onSubmit={(e) => {
-            e.preventDefault();
-            handlePostClick();
-          }}
-        >
-          <Typography variant="h6" gutterBottom>
-            Reply to Topic
-          </Typography>
-          <TextField
-            id="replyContent"
-            label="Your Reply"
-            fullWidth
-            multiline
-            rows={3}
-            margin="normal"
-            value={replyContent}
-            onChange={(e) => setReplyContent(e.target.value)}
-          />
-                        <Typography variant="body2" color="textSecondary" sx={{ mt: 2 }}>
-                You can format your content using Markdown. Here are some examples:
-                <ul>
-                  <li>
-                    <strong>Bold:</strong> <code>**bold text**</code> → <strong>bold text</strong>
-                  </li>
-                  <li>
-                    <strong>Italic:</strong> <code>*italic text*</code> → <em>italic text</em>
-                  </li>
-                  <li>
-                    <strong>Link:</strong> <code>[link text](https://example.com)</code> →{" "}
-                    <a href="https://example.com" target="_blank" rel="noopener noreferrer">
-                      link text
-                    </a>
-                  </li>
-                  <li>
-                    <strong>List:</strong> <code>- Item 1</code> → - Item 1
-                  </li>
-                  <li>
-                    <strong>Code:</strong> <code>`inline code`</code> → <code>inline code</code>
-                  </li>
-                </ul>
-                For more details, check out the{" "}
-                <a href="https://www.markdownguide.org/" target="_blank" rel="noopener noreferrer">
-                  Markdown Guide
-                </a>.
-              </Typography>
-          <Button type="submit" variant="contained" sx={{ marginTop: "1rem" }}>
-            Post Reply
-          </Button>
-        </Box>
+        <ReplyToPostForm
+        categoryId={categoryId}
+        forumId={forumId}
+        topicId={topicId}
+        session={session}
+        page={page}
+        fetchPosts={fetchPosts}
+        setError={setError}
+        setRetryAfter={setRetryAfter}
+      />
       )}
     </Box>
   );
