@@ -174,10 +174,22 @@ const ViewTopicPage = () => {
                     session={{ token: session.token }}
                   />
 
-                  <Button variant="outlined" color="secondary" size="small">
-                    <Link to={`/category/${categoryId}/forums/${forumId}/topics/${topicId}/posts/${post.Id}`}>
-                      Edit
-                    </Link>
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    size="small"
+                    component={Link}
+                    to={`/category/${categoryId}/forums/${forumId}/topics/${topicId}/posts/${post.Id}`}
+                    sx={{
+                      textTransform: "none",
+                      padding: "4px 12px",
+                      '&:hover': {
+                        borderColor: 'secondary.main',
+                        backgroundColor: 'secondary.light',
+                      },
+                    }}
+                  >
+                    Edit
                   </Button>
                   <Button
                     variant="outlined"
@@ -188,9 +200,8 @@ const ViewTopicPage = () => {
                       if (!confirmDelete) return;
 
                       try {
-                        const resp = await fetch(
-                          import.meta.env.VITE_API_URL +
-                            `/s/categories/${categoryId}/forums/${forumId}/topics/${topicId}/posts/${post.Id}`,
+                        const response = await fetch(
+                          `${import.meta.env.VITE_API_URL}/s/categories/${categoryId}/forums/${forumId}/topics/${topicId}/posts/${post.Id}`,
                           {
                             method: "DELETE",
                             headers: {
@@ -200,23 +211,31 @@ const ViewTopicPage = () => {
                           }
                         );
 
-                        if (resp.status === 429) {
-                          const retryAfterHeader = resp.headers.get("Retry-After");
+                        if (response.status === 429) {
+                          const retryAfterHeader = response.headers.get("Retry-After");
                           setRetryAfter(retryAfterHeader ? parseInt(retryAfterHeader, 10) : 10);
                           throw new Error("Too many requests. Please try again later.");
                         }
 
-                        if (!resp.ok) {
-                          throw new Error(`Error: ${resp.statusText}`);
+                        if (!response.ok) {
+                          throw new Error(`Error: ${response.statusText}`);
                         }
 
-                        const success = await resp.json();
+                        const success = await response.json();
                         if (success) {
                           navigate("/");
                         }
-                      } catch (err: any) {
-                        setError(err.message);
+                      } catch (error) {
+                        setError(error.message);
                       }
+                    }}
+                    sx={{
+                      textTransform: "none",
+                      padding: "4px 12px",
+                      '&:hover': {
+                        borderColor: 'error.main',
+                        backgroundColor: 'error.light',
+                      },
                     }}
                   >
                     Delete
@@ -228,9 +247,8 @@ const ViewTopicPage = () => {
                     size="small"
                     onClick={async () => {
                       try {
-                        const resp = await fetch(
-                          import.meta.env.VITE_API_URL +
-                            `/categories/${categoryId}/forums/${forumId}/topics/${topicId}/posts/${post.Id}/flag`,
+                        const response = await fetch(
+                          `${import.meta.env.VITE_API_URL}/categories/${categoryId}/forums/${forumId}/topics/${topicId}/posts/${post.Id}/flag`,
                           {
                             method: "POST",
                             headers: {
@@ -240,24 +258,32 @@ const ViewTopicPage = () => {
                           }
                         );
 
-                        if (resp.status === 429) {
-                          const retryAfterHeader = resp.headers.get("Retry-After");
+                        if (response.status === 429) {
+                          const retryAfterHeader = response.headers.get("Retry-After");
                           setRetryAfter(retryAfterHeader ? parseInt(retryAfterHeader, 10) : 10);
                           throw new Error("Too many requests. Please try again later.");
                         }
 
-                        const response = await resp.text()
-                        if (!resp.ok) {
-                          window.alert(`Error: ${response}`);
+                        const responseText = await response.text();
+                        if (!response.ok) {
+                          window.alert(`Error: ${responseText}`);
                         } else {
-                          window.alert("Post has been flagged for review by forum moderators!")
+                          window.alert("Post has been flagged for review by forum moderators!");
                         }
-                      } catch (err: any) {
-                        setError(err.message);
+                      } catch (error) {
+                        setError(error.message);
                       }
                     }}
+                    sx={{
+                      textTransform: "none",
+                      padding: "4px 12px",
+                      '&:hover': {
+                        borderColor: 'error.main',
+                        backgroundColor: 'error.light',
+                      },
+                    }}
                   >
-                    Flag Post For Moderator Review
+                    Flag Post
                   </Button>
                 </Stack>
               )}
