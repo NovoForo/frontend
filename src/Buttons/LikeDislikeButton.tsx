@@ -115,17 +115,22 @@ const LikeDislikeButton: React.FC<LikeDislikeButtonProps> = ({
       });
 
       if (response.ok) {
-        console.log(`Action ${action} succeeded.`);
+        // We expect a text response, but we're not using it directly.
+        const resultText = await response.text();
+        console.log("API response text:", resultText);
 
-        // Assuming the server returns the updated post object
-        const updatedPost: Post = await response.json();
+        // Instead of using the returned data, we'll just manually adjust the like count
+        // and likeStatus based on the user's action.
+        if (action === "like") {
+          setLikeCount((prev) => prev + 1);
+          setLikeStatus("liked");
+          setSnackbarMessage("You liked this post.");
+        } else {
+          setLikeCount((prev) => prev - 1);
+          setLikeStatus("disliked");
+          setSnackbarMessage("You disliked this post.");
+        }
 
-        setLikeCount(updatedPost.likeCount || 0);
-        setLikeStatus(updatedPost.likeStatus || "none");
-
-        setSnackbarMessage(
-          action === "like" ? "You liked this post." : "You disliked this post."
-        );
         setSnackbarSeverity("success");
         setOpenSnackbar(true);
       } else {
@@ -150,7 +155,7 @@ const LikeDislikeButton: React.FC<LikeDislikeButtonProps> = ({
     <>
       <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
         <IconButton
-          color={likeStatus === "liked" ? "primary" : "inherit"} // Changed "default" to "inherit"
+          color={likeStatus === "liked" ? "primary" : "inherit"}
           onClick={() => handleLikeDislike("like")}
           disabled={isDisabled}
           aria-label="like"
@@ -163,7 +168,7 @@ const LikeDislikeButton: React.FC<LikeDislikeButtonProps> = ({
         </IconButton>
         <span style={{ margin: "2px", fontSize: "16px" }}>{likeCount}</span>
         <IconButton
-          color={likeStatus === "disliked" ? "primary" : "inherit"} // Changed "default" to "inherit"
+          color={likeStatus === "disliked" ? "primary" : "inherit"}
           onClick={() => handleLikeDislike("dislike")}
           disabled={isDisabled}
           aria-label="dislike"

@@ -27,7 +27,13 @@ const ViewTopicPage = () => {
       const skip = (currentPage - 1) * limit;
       const resp = await fetch(
         import.meta.env.VITE_API_URL +
-          `/categories/${categoryId}/forums/${forumId}/topics/${topicId}?skip=${skip}&limit=${limit}`
+          `/categories/${categoryId}/forums/${forumId}/topics/${topicId}?skip=${skip}&limit=${limit}`,
+            {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: session?.token ? `Bearer ${session?.token}` : '',
+              }}
       );
 
       if (session) {
@@ -96,7 +102,7 @@ const ViewTopicPage = () => {
 
   useEffect(() => {
     fetchPosts(page);
-  }, [page]);
+  }, [page, session]);
 
   if (error) {
     return (
@@ -151,7 +157,7 @@ const ViewTopicPage = () => {
                   categoryId="123"
                   forumId="456"
                   topicId="789"
-                  post={{ id: String(post.Id), LikeCount: post.LikeCount, LikeStatus: "none" }}
+                  post={{ id: String(post.Id), LikeCount: post.LikeCount, LikeStatus: post.LikeStatusText }}
                 />
               )}
               {session && session.user?.name === post.User.Username && (
@@ -162,10 +168,10 @@ const ViewTopicPage = () => {
                     topicId="789"
                     post={{ 
                       id: String(post.Id), 
-                      likeCount: post.LikeCount,   // lowercase "l"
-                      likeStatus: "liked" // lowercase "s"
+                      likeCount: post.LikeCount,  
+                      likeStatus: post.LikeStatusText,
                     }} 
-                    session={{ token: "your-auth-token" }}
+                    session={{ token: session.token }}
                   />
 
                   <Button variant="outlined" color="secondary" size="small">
