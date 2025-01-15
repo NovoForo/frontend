@@ -427,14 +427,20 @@ export default function ModeratorControlPanelPage() {
 
         {/* Tabs */}
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs value={value} onChange={handleChange} aria-label="moderation tabs">
-            <Tab label="Moderation Queue" {...a11yProps(0)} />
-            <Tab label="Review Post Flags" {...a11yProps(1)} />
-            <Tab label="Ban User" {...a11yProps(2)} />
-            <Tab label="Unban User" {...a11yProps(3)} />
-            <Tab label="Lock User" {...a11yProps(4)} />
-            <Tab label="Unlock User" {...a11yProps(5)} />
-          </Tabs>
+        <Tabs
+            value={value}
+            onChange={handleChange}
+            variant="scrollable"
+            scrollButtons="auto"
+            aria-label="moderation tabs"
+            >
+                <Tab label="Moderation Queue" {...a11yProps(0)} />
+                <Tab label="Review Post Flags" {...a11yProps(1)} />
+                <Tab label="Ban User" {...a11yProps(2)} />
+                <Tab label="Unban User" {...a11yProps(3)} />
+                <Tab label="Lock User" {...a11yProps(4)} />
+                <Tab label="Unlock User" {...a11yProps(5)} />
+            </Tabs>
         </Box>
 
         {/* Tab Panels */}
