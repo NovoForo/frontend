@@ -1,10 +1,11 @@
 import { Alert, Badge, Box, Button, Card, TextField, Typography, Avatar, Stack, Pagination } from "@mui/material";
-import { useSession } from "@toolpad/core";
+// import { useSession } from "@toolpad/core";
+import { useSession } from "../SessionProvider";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { ExtendedSession } from "../ExtendedSession";
+// import { ExtendedSession } from "../ExtendedSession";
 import { Post } from "../types";
-import Markdown from 'react-markdown'
+import Markdown from "react-markdown";
 import LikeDislikeButton from "../Buttons/LikeDislikeButton";
 
 const ViewTopicPage = () => {
@@ -17,9 +18,9 @@ const ViewTopicPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [retryAfter, setRetryAfter] = useState<number | null>(null);
   const limit = 10;
-  const session = useSession() as ExtendedSession | null;
+  const { session } = useSession();
   const navigate = useNavigate();
-  
+
   const fetchPosts = async (currentPage: number) => {
     try {
       setLoading(true);
@@ -28,24 +29,26 @@ const ViewTopicPage = () => {
       const resp = await fetch(
         import.meta.env.VITE_API_URL +
           `/categories/${categoryId}/forums/${forumId}/topics/${topicId}?skip=${skip}&limit=${limit}`,
-            {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: session?.token ? `Bearer ${session?.token}` : '',
-              }}
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: session?.token ? `Bearer ${session?.token}` : "",
+          },
+        }
       );
 
       if (session) {
         await fetch(
           import.meta.env.VITE_API_URL +
             `/categories/${categoryId}/forums/${forumId}/topics/${topicId}?skip=${skip}&limit=${limit}`,
-              {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: `Bearer ${session?.token}`,
-                }}
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${session?.token}`,
+            },
+          }
         );
       }
 
@@ -77,7 +80,7 @@ const ViewTopicPage = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${(session as ExtendedSession).token}`,
+            Authorization: `Bearer ${session?.token}`,
           },
           body: JSON.stringify({ content: replyContent }),
         }
@@ -166,12 +169,12 @@ const ViewTopicPage = () => {
                     categoryId="123"
                     forumId="456"
                     topicId="789"
-                    post={{ 
-                      id: String(post.Id), 
-                      likeCount: post.LikeCount,  
+                    post={{
+                      id: String(post.Id),
+                      likeCount: post.LikeCount,
                       likeStatus: post.LikeStatusText,
-                    }} 
-                    session={{ token: session.token }}
+                    }}
+                    session={{ token: session?.token }}
                   />
 
                   <Button variant="outlined" color="secondary" size="small">
@@ -195,7 +198,7 @@ const ViewTopicPage = () => {
                             method: "DELETE",
                             headers: {
                               "Content-Type": "application/json",
-                              Authorization: `Bearer ${(session as ExtendedSession).token}`,
+                              Authorization: `Bearer ${session.token}`,
                             },
                           }
                         );
@@ -235,7 +238,7 @@ const ViewTopicPage = () => {
                             method: "POST",
                             headers: {
                               "Content-Type": "application/json",
-                              Authorization: `Bearer ${(session as ExtendedSession).token}`,
+                              Authorization: `Bearer ${session.token}`,
                             },
                           }
                         );
@@ -246,11 +249,11 @@ const ViewTopicPage = () => {
                           throw new Error("Too many requests. Please try again later.");
                         }
 
-                        const response = await resp.text()
+                        const response = await resp.text();
                         if (!resp.ok) {
                           window.alert(`Error: ${response}`);
                         } else {
-                          window.alert("Post has been flagged for review by forum moderators!")
+                          window.alert("Post has been flagged for review by forum moderators!");
                         }
                       } catch (err: any) {
                         setError(err.message);
@@ -294,33 +297,34 @@ const ViewTopicPage = () => {
             value={replyContent}
             onChange={(e) => setReplyContent(e.target.value)}
           />
-                        <Typography variant="body2" color="textSecondary" sx={{ mt: 2 }}>
-                You can format your content using Markdown. Here are some examples:
-                <ul>
-                  <li>
-                    <strong>Bold:</strong> <code>**bold text**</code> → <strong>bold text</strong>
-                  </li>
-                  <li>
-                    <strong>Italic:</strong> <code>*italic text*</code> → <em>italic text</em>
-                  </li>
-                  <li>
-                    <strong>Link:</strong> <code>[link text](https://example.com)</code> →{" "}
-                    <a href="https://example.com" target="_blank" rel="noopener noreferrer">
-                      link text
-                    </a>
-                  </li>
-                  <li>
-                    <strong>List:</strong> <code>- Item 1</code> → - Item 1
-                  </li>
-                  <li>
-                    <strong>Code:</strong> <code>`inline code`</code> → <code>inline code</code>
-                  </li>
-                </ul>
-                For more details, check out the{" "}
-                <a href="https://www.markdownguide.org/" target="_blank" rel="noopener noreferrer">
-                  Markdown Guide
-                </a>.
-              </Typography>
+          <Typography variant="body2" color="textSecondary" sx={{ mt: 2 }}>
+            You can format your content using Markdown. Here are some examples:
+            <ul>
+              <li>
+                <strong>Bold:</strong> <code>**bold text**</code> → <strong>bold text</strong>
+              </li>
+              <li>
+                <strong>Italic:</strong> <code>*italic text*</code> → <em>italic text</em>
+              </li>
+              <li>
+                <strong>Link:</strong> <code>[link text](https://example.com)</code> →{" "}
+                <a href="https://example.com" target="_blank" rel="noopener noreferrer">
+                  link text
+                </a>
+              </li>
+              <li>
+                <strong>List:</strong> <code>- Item 1</code> → - Item 1
+              </li>
+              <li>
+                <strong>Code:</strong> <code>`inline code`</code> → <code>inline code</code>
+              </li>
+            </ul>
+            For more details, check out the{" "}
+            <a href="https://www.markdownguide.org/" target="_blank" rel="noopener noreferrer">
+              Markdown Guide
+            </a>
+            .
+          </Typography>
           <Button type="submit" variant="contained" sx={{ marginTop: "1rem" }}>
             Post Reply
           </Button>

@@ -12,17 +12,19 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useSession } from "@toolpad/core";
+// import { useSession } from "@toolpad/core";
 import { useNavigate } from "react-router-dom";
 import { Category } from "../types";
-import { ExtendedSession } from "../ExtendedSession";
+// import { ExtendedSession } from "../ExtendedSession";
+import { useSession } from "../SessionProvider";
 
 const AdministratorControlPanelPage = () => {
   const [newCategory, setNewCategory] = useState({ name: "", description: "" });
   const [newForum, setNewForum] = useState({ name: "", description: "" });
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const session = useSession() as ExtendedSession | null;
+  // const session = useSession() as ExtendedSession | null;
+  const { session } = useSession();
   const navigate = useNavigate();
 
   useEffect(() => {
