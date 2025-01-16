@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Alert, Box, Button, Container, Paper, Snackbar, TextField, Typography } from "@mui/material";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router";
 import { useSession } from "@toolpad/core";
 import { useState, useEffect } from "react";
 import { ExtendedSession } from "../ExtendedSession";
@@ -100,7 +100,7 @@ export default function NewTopicsPage() {
                 error={!postContent.trim()}
                 helperText={!postContent.trim() ? "Please add some content." : ""}
               />
-                            <Typography variant="body2" color="textSecondary" sx={{ mt: 2 }}>
+              <Typography variant="body2" color="textSecondary" sx={{ mt: 2 }}>
                 You can format your content using Markdown. Here are some examples:
                 <ul>
                   <li>
@@ -125,7 +125,8 @@ export default function NewTopicsPage() {
                 For more details, check out the{" "}
                 <a href="https://www.markdownguide.org/" target="_blank" rel="noopener noreferrer">
                   Markdown Guide
-                </a>.
+                </a>
+                .
               </Typography>
               <Button type="submit" variant="contained" disabled={!isFormValid}>
                 Create New Topic

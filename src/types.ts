@@ -1,4 +1,5 @@
 export type Post = {
+  LikeStatusText: "liked" | "disliked" | "none";
   Id: number;
   Title: string;
   User: User;
@@ -24,8 +25,8 @@ export type Category = {
 
 export type Forum = {
   Id: number;
-  Name?: string;
-  Description?: string;
+  Name: string;
+  Description: string;
 };
 
 export type Topic = {
@@ -36,5 +37,5 @@ export type Topic = {
   CreatedAt: string;
   UpdatedAt: string;
   Posts: Post[];
-  Views: Number,
+  Views: Number;
 };

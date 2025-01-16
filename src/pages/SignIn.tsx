@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router";
 import { useSession } from "../SessionProvider";
 import type { ExtendedSession } from "../SessionProvider";
 import { Box, Typography, TextField, Button, Checkbox, FormControlLabel, Alert, Paper } from "@mui/material";

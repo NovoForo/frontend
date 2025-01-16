@@ -2,7 +2,7 @@ import { Alert, Badge, Box, Button, Card, TextField, Typography, Avatar, Stack, 
 // import { useSession } from "@toolpad/core";
 import { useSession } from "../SessionProvider";
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router";
 // import { ExtendedSession } from "../ExtendedSession";
 import { Post } from "../types";
 import Markdown from "react-markdown";
@@ -132,7 +132,7 @@ const ViewTopicPage = () => {
                   categoryId="123"
                   forumId="456"
                   topicId="789"
-                  post={{ id: String(post.Id), LikeCount: post.LikeCount, LikeStatus: post.LikeStatusText }}
+                  post={{ id: String(post.Id), likeCount: post.LikeCount, likeStatus: post.LikeStatusText }}
                 />
               )}
               {session && session.user?.name === post.User.Username && (

@@ -14,10 +14,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-// import { useSession } from "@toolpad/core";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { Category, Forum } from "../types";
-// import { ExtendedSession } from "../ExtendedSession";
 import { useSession } from "../SessionProvider";
 
 const AdministratorControlPanelPage = () => {
@@ -242,7 +240,7 @@ const AdministratorControlPanelPage = () => {
     setEditForumId(forumId);
     const selected = forums.find((f) => f.Id === forumId);
     if (selected) {
-      setEditForum({ name: selected?.Name, description: selected?.Description });
+      setEditForum({ name: selected.Name, description: selected.Description });
     }
   };
 

@@ -1,21 +1,8 @@
 import React, { useState } from "react";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { useNavigate } from "react-router";
 
-const DeletePostButton = ({
-  categoryId,
-  forumId,
-  topicId,
-  postId,
-  token,
-}) => {
+const DeletePostButton = ({ categoryId, forumId, topicId, postId, token }) => {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [retryAfter, setRetryAfter] = useState(0);
@@ -73,9 +60,9 @@ const DeletePostButton = ({
         sx={{
           textTransform: "none",
           padding: "4px 12px",
-          '&:hover': {
-            borderColor: 'error.main',
-            backgroundColor: 'error.light',
+          "&:hover": {
+            borderColor: "error.main",
+            backgroundColor: "error.light",
           },
         }}
       >
@@ -87,9 +74,7 @@ const DeletePostButton = ({
         aria-labelledby="confirm-delete-title"
         aria-describedby="confirm-delete-description"
       >
-        <DialogTitle id="confirm-delete-title">
-          Confirm Delete
-        </DialogTitle>
+        <DialogTitle id="confirm-delete-title">Confirm Delete</DialogTitle>
         <DialogContent>
           <DialogContentText id="confirm-delete-description">
             Are you sure you want to delete this post? This action cannot be undone.
@@ -99,12 +84,7 @@ const DeletePostButton = ({
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button
-            onClick={handleDelete}
-            color="error"
-            variant="contained"
-            autoFocus
-          >
+          <Button onClick={handleDelete} color="error" variant="contained" autoFocus>
             Delete
           </Button>
         </DialogActions>

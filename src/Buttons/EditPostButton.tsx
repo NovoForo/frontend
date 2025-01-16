@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 const EditPostButton = ({ categoryId, forumId, topicId, postId }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -23,9 +23,9 @@ const EditPostButton = ({ categoryId, forumId, topicId, postId }) => {
         sx={{
           textTransform: "none",
           padding: "4px 12px",
-          '&:hover': {
-            borderColor: 'secondary.main',
-            backgroundColor: 'secondary.light',
+          "&:hover": {
+            borderColor: "secondary.main",
+            backgroundColor: "secondary.light",
           },
         }}
       >

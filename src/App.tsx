@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router";
 import { ReactRouterAppProvider } from "@toolpad/core/react-router";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import GavelIcon from "@mui/icons-material/Gavel";
