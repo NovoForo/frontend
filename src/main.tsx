@@ -15,9 +15,8 @@ import AdministratorControlPanelPage from "./pages/AdministratorControlPanelPage
 import ModeratorControlPanelPage from "./pages/ModeratorControlPanelPage";
 import SignIn from "./pages/SignIn";
 import { sessionTimeout } from "./utils";
-import { useSession } from "./SessionProvider";
+import { SessionProvider, useSession } from "./SessionProvider";
 
-// import { Navigate, Outlet } from 'react-router-dom';
 interface SessionRouteProps {
   sessionTimeout: (timeStamp: number | undefined) => boolean;
   element: React.ReactNode;
@@ -36,7 +35,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        Component: Layout,
+        element: <Layout />,
         children: [
           {
             path: "/",
