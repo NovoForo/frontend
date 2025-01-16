@@ -1,13 +1,13 @@
 import * as React from "react";
 import { Alert, Box, Button, Container, Paper, Snackbar, TextField, Typography } from "@mui/material";
 import { Link, useNavigate, useParams } from "react-router";
-import { useSession } from "@toolpad/core";
+import { useSession } from "../SessionProvider";
 import { useState, useEffect } from "react";
 import { ExtendedSession } from "../ExtendedSession";
 
 export default function NewTopicsPage() {
   const { categoryId, forumId } = useParams();
-  const session = useSession() as ExtendedSession | null;
+  const { session } = useSession();
   const navigate = useNavigate();
 
   const [topicTitle, setTopicTitle] = useState("");

@@ -11,11 +11,9 @@ import {
   Box,
   Typography,
 } from "@mui/material";
-// import { useSession } from "@toolpad/core";
 import { SetStateAction, useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 import { Topic } from "../types";
-// import {ExtendedSession} from "../ExtendedSession";
 import { useSession } from "../SessionProvider";
 
 const ListForumTopics = () => {

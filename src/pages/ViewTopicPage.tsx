@@ -1,9 +1,7 @@
 import { Alert, Badge, Box, Button, Card, TextField, Typography, Avatar, Stack, Pagination } from "@mui/material";
-// import { useSession } from "@toolpad/core";
 import { useSession } from "../SessionProvider";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
-// import { ExtendedSession } from "../ExtendedSession";
 import { Post } from "../types";
 import Markdown from "react-markdown";
 import LikeDislikeButton from "../Buttons/LikeDislikeButton";

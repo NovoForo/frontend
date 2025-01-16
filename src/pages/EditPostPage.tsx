@@ -1,13 +1,13 @@
 import * as React from "react";
 import { Box, Button, Container, Paper, TextField, Typography, Alert } from "@mui/material";
 import { useNavigate, useParams } from "react-router";
-import { useSession } from "@toolpad/core";
+import { useSession } from "../SessionProvider";
 import { useState, useEffect } from "react";
 import { ExtendedSession } from "../ExtendedSession";
 
 export default function EditPostPage() {
   const { categoryId, forumId, topicId, postId } = useParams();
-  const session = useSession() as ExtendedSession | null;
+  const { session } = useSession();
   const navigate = useNavigate();
 
   const [postContent, setPostContent] = useState("");
