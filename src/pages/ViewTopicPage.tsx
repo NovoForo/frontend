@@ -1,10 +1,9 @@
 import { Alert, Badge, Box, Button, Card, TextField, Typography, Avatar, Stack, Pagination } from "@mui/material";
-import { useSession } from "@toolpad/core";
+import { useSession } from "../SessionProvider";
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { ExtendedSession } from "../ExtendedSession";
+import { Link, useNavigate, useParams } from "react-router";
 import { Post } from "../types";
-import Markdown from 'react-markdown'
+import Markdown from "react-markdown";
 import LikeDislikeButton from "../Buttons/LikeDislikeButton";
 import EditPostButton from "../Buttons/EditPostButton";
 import DeletePostButton from "../Buttons/DeletePostButton";
@@ -20,9 +19,9 @@ const ViewTopicPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [retryAfter, setRetryAfter] = useState<number | null>(null);
   const limit = 10;
-  const session = useSession() as ExtendedSession | null;
+  const { session } = useSession();
   const navigate = useNavigate();
-  
+
   const fetchPosts = async (currentPage: number) => {
     try {
       setLoading(true);
@@ -31,24 +30,26 @@ const ViewTopicPage = () => {
       const resp = await fetch(
         import.meta.env.VITE_API_URL +
           `/categories/${categoryId}/forums/${forumId}/topics/${topicId}?skip=${skip}&limit=${limit}`,
-            {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: session?.token ? `Bearer ${session?.token}` : '',
-              }}
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: session?.token ? `Bearer ${session?.token}` : "",
+          },
+        }
       );
 
       if (session) {
         await fetch(
           import.meta.env.VITE_API_URL +
             `/categories/${categoryId}/forums/${forumId}/topics/${topicId}?skip=${skip}&limit=${limit}`,
-              {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: `Bearer ${session?.token}`,
-                }}
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${session?.token}`,
+            },
+          }
         );
       }
 
@@ -71,8 +72,6 @@ const ViewTopicPage = () => {
       setLoading(false);
     }
   };
-
-  
 
   useEffect(() => {
     fetchPosts(page);
@@ -131,7 +130,7 @@ const ViewTopicPage = () => {
                   categoryId="123"
                   forumId="456"
                   topicId="789"
-                  post={{ id: String(post.Id), LikeCount: post.LikeCount, LikeStatus: post.LikeStatusText }}
+                  post={{ id: String(post.Id), likeCount: post.LikeCount, likeStatus: post.LikeStatusText }}
                 />
               )}
               {session && session.user?.name === post.User.Username && (
@@ -140,20 +139,15 @@ const ViewTopicPage = () => {
                     categoryId="123"
                     forumId="456"
                     topicId="789"
-                    post={{ 
-                      id: String(post.Id), 
-                      likeCount: post.LikeCount,  
+                    post={{
+                      id: String(post.Id),
+                      likeCount: post.LikeCount,
                       likeStatus: post.LikeStatusText,
-                    }} 
+                    }}
                     session={{ token: session.token }}
                   />
 
-                  <EditPostButton
-                          categoryId={categoryId}
-                          forumId={forumId}
-                          topicId={topicId}
-                          postId={post.Id}
-                        />
+                  <EditPostButton categoryId={categoryId} forumId={forumId} topicId={topicId} postId={post.Id} />
 
                   <DeletePostButton
                     categoryId={categoryId}
@@ -184,15 +178,15 @@ const ViewTopicPage = () => {
       {/* Reply Section */}
       {session && (
         <ReplyToPostForm
-        categoryId={categoryId}
-        forumId={forumId}
-        topicId={topicId}
-        session={session}
-        page={page}
-        fetchPosts={fetchPosts}
-        setError={setError}
-        setRetryAfter={setRetryAfter}
-      />
+          categoryId={categoryId}
+          forumId={forumId}
+          topicId={topicId}
+          session={session}
+          page={page}
+          fetchPosts={fetchPosts}
+          setError={setError}
+          setRetryAfter={setRetryAfter}
+        />
       )}
     </Box>
   );

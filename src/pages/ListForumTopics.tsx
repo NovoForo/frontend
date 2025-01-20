@@ -11,11 +11,10 @@ import {
   Box,
   Typography,
 } from "@mui/material";
-import { useSession } from "@toolpad/core";
 import { SetStateAction, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router";
 import { Topic } from "../types";
-import {ExtendedSession} from "../ExtendedSession";
+import { useSession } from "../SessionProvider";
 
 const ListForumTopics = () => {
   const { categoryId, forumId } = useParams();
@@ -25,7 +24,7 @@ const ListForumTopics = () => {
   const [page, setPage] = useState(1); // Current page
   const [totalTopics, setTotalTopics] = useState(0); // Total number of topics
   const [limit] = useState(10); // Number of items per page
-  const session = useSession() as ExtendedSession | null;
+  const session = useSession();
 
   useEffect(() => {
     async function fetchData() {

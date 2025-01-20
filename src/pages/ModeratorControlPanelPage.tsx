@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import {
   Box,
   Button,
@@ -17,15 +17,15 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
-} from '@mui/material';
-import { useSession } from '@toolpad/core';
-import { ExtendedSession } from '../ExtendedSession';
+} from "@mui/material";
+import { useSession } from "../SessionProvider";
+import { ExtendedSession } from "../ExtendedSession";
 
 /** Utility function for a11y props */
 function a11yProps(index: number) {
   return {
     id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
   };
 }
 
@@ -51,16 +51,11 @@ function TabPanel({ children, value, index, ...other }: TabPanelProps) {
 }
 
 /** Helper function for making authorized fetch calls */
-async function handleAction(
-  url: string,
-  token: string | undefined,
-  method: string,
-  onSuccess: () => void
-) {
+async function handleAction(url: string, token: string | undefined, method: string, onSuccess: () => void) {
   await fetch(url, {
     method,
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
   });
@@ -78,10 +73,7 @@ function TopicsForReview({
   topics: any[];
   token?: string;
   refreshQueue: () => void;
-  openConfirmationDialog: (
-    message: string,
-    onConfirm: () => void
-  ) => void;
+  openConfirmationDialog: (message: string, onConfirm: () => void) => void;
 }) {
   if (!topics || topics.length === 0) {
     return (
@@ -100,7 +92,7 @@ function TopicsForReview({
         <Table aria-label="Topics for review">
           <TableHead>
             <TableRow>
-              <TableCell sx={{ width: '30%' }}>Actions</TableCell>
+              <TableCell sx={{ width: "30%" }}>Actions</TableCell>
               <TableCell>Topic Title</TableCell>
             </TableRow>
           </TableHead>
@@ -112,15 +104,13 @@ function TopicsForReview({
                     color="error"
                     sx={{ mr: 1 }}
                     onClick={() =>
-                      openConfirmationDialog(
-                        'Are you sure you want to release this topic?',
-                        () =>
-                          handleAction(
-                            `${import.meta.env.VITE_API_URL}/moderator/topics/${topic.Id}/release`,
-                            token,
-                            'PATCH',
-                            refreshQueue
-                          )
+                      openConfirmationDialog("Are you sure you want to release this topic?", () =>
+                        handleAction(
+                          `${import.meta.env.VITE_API_URL}/moderator/topics/${topic.Id}/release`,
+                          token,
+                          "PATCH",
+                          refreshQueue
+                        )
                       )
                     }
                   >
@@ -129,15 +119,13 @@ function TopicsForReview({
                   <Button
                     color="error"
                     onClick={() =>
-                      openConfirmationDialog(
-                        'Are you sure you want to delete this topic?',
-                        () =>
-                          handleAction(
-                            `${import.meta.env.VITE_API_URL}/moderator/topics/${topic.Id}`,
-                            token,
-                            'DELETE',
-                            refreshQueue
-                          )
+                      openConfirmationDialog("Are you sure you want to delete this topic?", () =>
+                        handleAction(
+                          `${import.meta.env.VITE_API_URL}/moderator/topics/${topic.Id}`,
+                          token,
+                          "DELETE",
+                          refreshQueue
+                        )
                       )
                     }
                   >
@@ -168,10 +156,7 @@ function PostsForReview({
   posts: any[];
   token?: string;
   refreshQueue: () => void;
-  openConfirmationDialog: (
-    message: string,
-    onConfirm: () => void
-  ) => void;
+  openConfirmationDialog: (message: string, onConfirm: () => void) => void;
 }) {
   if (!posts || posts.length === 0) {
     return (
@@ -190,7 +175,7 @@ function PostsForReview({
         <Table aria-label="Posts for review">
           <TableHead>
             <TableRow>
-              <TableCell sx={{ width: '30%' }}>Actions</TableCell>
+              <TableCell sx={{ width: "30%" }}>Actions</TableCell>
               <TableCell>Post Content</TableCell>
             </TableRow>
           </TableHead>
@@ -202,15 +187,13 @@ function PostsForReview({
                     color="error"
                     sx={{ mr: 1 }}
                     onClick={() =>
-                      openConfirmationDialog(
-                        'Are you sure you want to release this post?',
-                        () =>
-                          handleAction(
-                            `${import.meta.env.VITE_API_URL}/moderator/posts/${post.Id}/release`,
-                            token,
-                            'PATCH',
-                            refreshQueue
-                          )
+                      openConfirmationDialog("Are you sure you want to release this post?", () =>
+                        handleAction(
+                          `${import.meta.env.VITE_API_URL}/moderator/posts/${post.Id}/release`,
+                          token,
+                          "PATCH",
+                          refreshQueue
+                        )
                       )
                     }
                   >
@@ -219,15 +202,13 @@ function PostsForReview({
                   <Button
                     color="error"
                     onClick={() =>
-                      openConfirmationDialog(
-                        'Are you sure you want to delete this post?',
-                        () =>
-                          handleAction(
-                            `${import.meta.env.VITE_API_URL}/moderator/posts/${post.Id}`,
-                            token,
-                            'DELETE',
-                            refreshQueue
-                          )
+                      openConfirmationDialog("Are you sure you want to delete this post?", () =>
+                        handleAction(
+                          `${import.meta.env.VITE_API_URL}/moderator/posts/${post.Id}`,
+                          token,
+                          "DELETE",
+                          refreshQueue
+                        )
                       )
                     }
                   >
@@ -256,10 +237,7 @@ function FlagsForReview({
   flags: any[];
   token?: string;
   refreshQueue: () => void;
-  openConfirmationDialog: (
-    message: string,
-    onConfirm: () => void
-  ) => void;
+  openConfirmationDialog: (message: string, onConfirm: () => void) => void;
 }) {
   if (!flags || flags.length === 0) {
     return (
@@ -278,7 +256,7 @@ function FlagsForReview({
         <Table aria-label="Flags for review">
           <TableHead>
             <TableRow>
-              <TableCell sx={{ width: '30%' }}>Actions</TableCell>
+              <TableCell sx={{ width: "30%" }}>Actions</TableCell>
               <TableCell>Flagged Post Content</TableCell>
             </TableRow>
           </TableHead>
@@ -289,15 +267,13 @@ function FlagsForReview({
                   <Button
                     sx={{ mr: 1 }}
                     onClick={() =>
-                      openConfirmationDialog(
-                        'Are you sure you want to delete this flag?',
-                        () =>
-                          handleAction(
-                            `${import.meta.env.VITE_API_URL}/moderator/posts/${flag.PostId}/flag`,
-                            token,
-                            'DELETE',
-                            refreshQueue
-                          )
+                      openConfirmationDialog("Are you sure you want to delete this flag?", () =>
+                        handleAction(
+                          `${import.meta.env.VITE_API_URL}/moderator/posts/${flag.PostId}/flag`,
+                          token,
+                          "DELETE",
+                          refreshQueue
+                        )
                       )
                     }
                   >
@@ -306,15 +282,13 @@ function FlagsForReview({
                   <Button
                     color="error"
                     onClick={() =>
-                      openConfirmationDialog(
-                        'Are you sure you want to delete this post?',
-                        () =>
-                          handleAction(
-                            `${import.meta.env.VITE_API_URL}/moderator/posts/${flag.Post.Id}`,
-                            token,
-                            'DELETE',
-                            refreshQueue
-                          )
+                      openConfirmationDialog("Are you sure you want to delete this post?", () =>
+                        handleAction(
+                          `${import.meta.env.VITE_API_URL}/moderator/posts/${flag.Post.Id}`,
+                          token,
+                          "DELETE",
+                          refreshQueue
+                        )
                       )
                     }
                   >
@@ -334,7 +308,7 @@ function FlagsForReview({
 }
 
 export default function ModeratorControlPanelPage() {
-  const session = useSession<ExtendedSession | null>();
+  const { session } = useSession();
   const [value, setValue] = React.useState(0);
   const [topics, setTopicsForReview] = React.useState<any[]>([]);
   const [posts, setPostsForReview] = React.useState<any[]>([]);
@@ -350,18 +324,15 @@ export default function ModeratorControlPanelPage() {
 
   // --- DIALOG STATE ---
   const [dialogOpen, setDialogOpen] = React.useState(false);
-  const [dialogMessage, setDialogMessage] = React.useState('');
+  const [dialogMessage, setDialogMessage] = React.useState("");
   const [confirmCallback, setConfirmCallback] = React.useState<() => void>(() => {});
 
   // Helper to open the dialog, set the message, and set the callback
-  const openConfirmationDialog = React.useCallback(
-    (message: string, onConfirm: () => void) => {
-      setDialogMessage(message);
-      setConfirmCallback(() => onConfirm); // store callback for later use
-      setDialogOpen(true);
-    },
-    []
-  );
+  const openConfirmationDialog = React.useCallback((message: string, onConfirm: () => void) => {
+    setDialogMessage(message);
+    setConfirmCallback(() => onConfirm); // store callback for later use
+    setDialogOpen(true);
+  }, []);
 
   // Handler for confirm
   const handleDialogConfirm = React.useCallback(() => {
@@ -379,15 +350,12 @@ export default function ModeratorControlPanelPage() {
   React.useEffect(() => {
     const fetchModerationQueue = async () => {
       if (!token) return;
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/moderator/queue`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/moderator/queue`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const json = await response.json();
       setTopicsForReview(json.topics || []);
       setPostsForReview(json.posts || []);
@@ -408,7 +376,7 @@ export default function ModeratorControlPanelPage() {
       alignItems="flex-start"
       minHeight="100vh"
       sx={{
-        backgroundColor: 'background.paper',
+        backgroundColor: "background.paper",
         padding: 2,
       }}
     >
@@ -416,9 +384,9 @@ export default function ModeratorControlPanelPage() {
         elevation={3}
         sx={{
           p: 4,
-          width: '100%',
+          width: "100%",
           maxWidth: 1000,
-          margin: '0 auto',
+          margin: "0 auto",
         }}
       >
         <Typography variant="h4" component="h1" gutterBottom>
@@ -426,21 +394,21 @@ export default function ModeratorControlPanelPage() {
         </Typography>
 
         {/* Tabs */}
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs
+        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <Tabs
             value={value}
             onChange={handleChange}
             variant="scrollable"
             scrollButtons="auto"
             aria-label="moderation tabs"
-            >
-                <Tab label="Moderation Queue" {...a11yProps(0)} />
-                <Tab label="Review Post Flags" {...a11yProps(1)} />
-                <Tab label="Ban User" {...a11yProps(2)} />
-                <Tab label="Unban User" {...a11yProps(3)} />
-                <Tab label="Lock User" {...a11yProps(4)} />
-                <Tab label="Unlock User" {...a11yProps(5)} />
-            </Tabs>
+          >
+            <Tab label="Moderation Queue" {...a11yProps(0)} />
+            <Tab label="Review Post Flags" {...a11yProps(1)} />
+            <Tab label="Ban User" {...a11yProps(2)} />
+            <Tab label="Unban User" {...a11yProps(3)} />
+            <Tab label="Lock User" {...a11yProps(4)} />
+            <Tab label="Unlock User" {...a11yProps(5)} />
+          </Tabs>
         </Box>
 
         {/* Tab Panels */}
@@ -486,11 +454,7 @@ export default function ModeratorControlPanelPage() {
       </Paper>
 
       {/* Confirmation Dialog */}
-      <Dialog
-        open={dialogOpen}
-        onClose={handleDialogClose}
-        aria-labelledby="confirmation-dialog-title"
-      >
+      <Dialog open={dialogOpen} onClose={handleDialogClose} aria-labelledby="confirmation-dialog-title">
         <DialogTitle id="confirmation-dialog-title">Confirm Action</DialogTitle>
         <DialogContent>
           <DialogContentText>{dialogMessage}</DialogContentText>

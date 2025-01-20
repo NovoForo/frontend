@@ -9,7 +9,7 @@ import MuiAlert, { AlertProps } from "@mui/material/Alert";
 
 // Define the types for the session object
 interface Session {
-  token: string;
+  token: string | undefined;
   // Add other session-related properties if necessary
 }
 
@@ -30,29 +30,18 @@ interface LikeDislikeButtonProps {
   session?: Session; // Make session optional if it can be undefined
 }
 
-const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
-  props,
-  ref
-) {
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-const LikeDislikeButton: React.FC<LikeDislikeButtonProps> = ({
-  categoryId,
-  forumId,
-  topicId,
-  post,
-  session,
-}) => {
+const LikeDislikeButton: React.FC<LikeDislikeButtonProps> = ({ categoryId, forumId, topicId, post, session }) => {
   // Debug: Log received props on mount and whenever they change
   useEffect(() => {
     console.log("LikeDislikeButton Props:", { categoryId, forumId, topicId, post, session });
   }, [categoryId, forumId, topicId, post, session]);
 
   const [likeCount, setLikeCount] = useState<number>(post.likeCount || 0);
-  const [likeStatus, setLikeStatus] = useState<"liked" | "disliked" | "none">(
-    post.likeStatus || "none"
-  );
+  const [likeStatus, setLikeStatus] = useState<"liked" | "disliked" | "none">(post.likeStatus || "none");
 
   // Synchronize state with post prop changes
   useEffect(() => {
@@ -80,10 +69,7 @@ const LikeDislikeButton: React.FC<LikeDislikeButtonProps> = ({
   const [snackbarMessage, setSnackbarMessage] = useState<string>("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<"error" | "success">("error");
 
-  const handleCloseSnackbar = (
-    event?: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
+  const handleCloseSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === "clickaway") {
       return;
     }
@@ -160,11 +146,7 @@ const LikeDislikeButton: React.FC<LikeDislikeButtonProps> = ({
           disabled={isDisabled}
           aria-label="like"
         >
-          {likeStatus === "liked" ? (
-            <ThumbUpAltIcon />
-          ) : (
-            <ThumbUpAltOutlinedIcon />
-          )}
+          {likeStatus === "liked" ? <ThumbUpAltIcon /> : <ThumbUpAltOutlinedIcon />}
         </IconButton>
         <span style={{ margin: "2px", fontSize: "16px" }}>{likeCount}</span>
         <IconButton
@@ -173,18 +155,10 @@ const LikeDislikeButton: React.FC<LikeDislikeButtonProps> = ({
           disabled={isDisabled}
           aria-label="dislike"
         >
-          {likeStatus === "disliked" ? (
-            <ThumbDownAltIcon />
-          ) : (
-            <ThumbDownAltOutlinedIcon />
-          )}
+          {likeStatus === "disliked" ? <ThumbDownAltIcon /> : <ThumbDownAltOutlinedIcon />}
         </IconButton>
       </div>
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-      >
+      <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
         <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: "100%" }}>
           {snackbarMessage}
         </Alert>

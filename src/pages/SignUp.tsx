@@ -1,31 +1,22 @@
-import * as React from 'react';
-import {
-  Box,
-  Button,
-  Paper,
-  TextField,
-  Typography,
-  Divider,
-  Stack,
-  Alert
-} from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import * as React from "react";
+import { Box, Button, Paper, TextField, Typography, Divider, Stack, Alert } from "@mui/material";
+import { useNavigate } from "react-router";
 
 export default function SignUp() {
   const navigate = useNavigate();
 
   // Form fields
-  const [username, setUsername] = React.useState('');
-  const [emailAddress, setEmailAddress] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const [username, setUsername] = React.useState("");
+  const [emailAddress, setEmailAddress] = React.useState("");
+  const [password, setPassword] = React.useState("");
 
   // Field-level error states
-  const [usernameError, setUsernameError] = React.useState('');
-  const [emailAddressError, setEmailAddressError] = React.useState('');
-  const [passwordError, setPasswordError] = React.useState('');
+  const [usernameError, setUsernameError] = React.useState("");
+  const [emailAddressError, setEmailAddressError] = React.useState("");
+  const [passwordError, setPasswordError] = React.useState("");
 
   // General API error state
-  const [apiError, setApiError] = React.useState('');
+  const [apiError, setApiError] = React.useState("");
 
   /**
    * Validate the input fields on the client:
@@ -38,32 +29,32 @@ export default function SignUp() {
 
     // Validate Username
     if (!username.trim()) {
-      setUsernameError('Username is required.');
+      setUsernameError("Username is required.");
       isValid = false;
     } else {
-      setUsernameError('');
+      setUsernameError("");
     }
 
     // Validate Email
     if (!emailAddress.trim()) {
-      setEmailAddressError('Email is required.');
+      setEmailAddressError("Email is required.");
       isValid = false;
     } else if (!/^\S+@\S+\.\S+$/.test(emailAddress)) {
-      setEmailAddressError('Email must be a valid email address.');
+      setEmailAddressError("Email must be a valid email address.");
       isValid = false;
     } else {
-      setEmailAddressError('');
+      setEmailAddressError("");
     }
 
     // Validate Password (minimum 16 characters)
     if (!password.trim()) {
-      setPasswordError('Password is required.');
+      setPasswordError("Password is required.");
       isValid = false;
     } else if (password.length < 16) {
-      setPasswordError('Password must be at least 16 characters long.');
+      setPasswordError("Password must be at least 16 characters long.");
       isValid = false;
     } else {
-      setPasswordError('');
+      setPasswordError("");
     }
 
     return isValid;
@@ -78,15 +69,15 @@ export default function SignUp() {
    */
   const handlePostClick = async () => {
     // Clear any lingering API error before validation
-    setApiError('');
+    setApiError("");
 
     // Validate the form before attempting the request
     if (!validateForm()) return;
 
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/sign-up`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           username,
           email: emailAddress,
@@ -97,16 +88,16 @@ export default function SignUp() {
       // If we get a 200 OK, navigate to sign in.
       // Otherwise, assume username/email conflict or password too short.
       if (response.ok) {
-        navigate('/sign-in');
+        navigate("/sign-in");
       } else {
         setApiError(
-          'Your username or email might already be in use, or the password is under 16 characters. Please try again.'
+          "Your username or email might already be in use, or the password is under 16 characters. Please try again."
         );
       }
     } catch (error) {
       // Network or other unexpected errors
       console.error(error);
-      setApiError('Something went wrong. Please try again later.');
+      setApiError("Something went wrong. Please try again later.");
     }
   };
 
@@ -117,7 +108,7 @@ export default function SignUp() {
       alignItems="center"
       minHeight="100vh"
       sx={{
-        backgroundColor: '#f3f3f3',
+        backgroundColor: "#f3f3f3",
         padding: 2,
       }}
     >
@@ -126,7 +117,7 @@ export default function SignUp() {
         sx={{
           p: 4,
           maxWidth: 400,
-          width: '100%',
+          width: "100%",
         }}
       >
         <Typography variant="h4" component="h1" gutterBottom>
@@ -157,7 +148,7 @@ export default function SignUp() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               error={Boolean(usernameError)}
-              helperText={usernameError || ' '}
+              helperText={usernameError || " "}
             />
 
             <TextField
@@ -167,7 +158,7 @@ export default function SignUp() {
               value={emailAddress}
               onChange={(e) => setEmailAddress(e.target.value)}
               error={Boolean(emailAddressError)}
-              helperText={emailAddressError || ' '}
+              helperText={emailAddressError || " "}
             />
 
             <TextField
@@ -178,7 +169,7 @@ export default function SignUp() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               error={Boolean(passwordError)}
-              helperText={passwordError || ' '}
+              helperText={passwordError || " "}
             />
 
             <Button variant="contained" type="submit" sx={{ mt: 1 }}>

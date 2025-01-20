@@ -14,10 +14,9 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useSession } from "@toolpad/core";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { Category, Forum } from "../types";
-import { ExtendedSession } from "../ExtendedSession";
+import { useSession } from "../SessionProvider";
 
 const AdministratorControlPanelPage = () => {
   const [newCategory, setNewCategory] = useState({ name: "", description: "" });
@@ -36,7 +35,7 @@ const AdministratorControlPanelPage = () => {
   const [forums, setForums] = useState<Forum[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [tabValue, setTabValue] = useState(0); // State to manage active tab
-  const session = useSession() as ExtendedSession | null;
+  const { session } = useSession();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -71,7 +70,7 @@ const AdministratorControlPanelPage = () => {
       .then((data) => {
         const forums: Forum[] = [];
         if (data?.Categories && Array.isArray(data.Categories)) {
-          data.Categories.forEach((category) => {
+          data.Categories.forEach((category: any) => {
             if (category?.Forums && Array.isArray(category.Forums)) {
               category.Forums.forEach((forum: Forum) => {
                 forums.push(forum);
@@ -211,7 +210,6 @@ const AdministratorControlPanelPage = () => {
       });
   };
 
-
   const handleDeleteCategory = () => {
     if (!deleteCategoryId) return;
     fetch(import.meta.env.VITE_API_URL + `/a/categories/${deleteCategoryId}`, {
@@ -293,12 +291,7 @@ const AdministratorControlPanelPage = () => {
         </Typography>
         <Divider sx={{ mb: 2 }} />
 
-        <Tabs
-          value={tabValue}
-          onChange={handleTabChange}
-          variant="fullWidth"
-          sx={{ mb: 2 }}
-        >
+        <Tabs value={tabValue} onChange={handleTabChange} variant="fullWidth" sx={{ mb: 2 }}>
           <Tab label="Add Category" />
           <Tab label="Add Forum" />
           <Tab label="Edit Category" />
@@ -322,18 +315,14 @@ const AdministratorControlPanelPage = () => {
                 fullWidth
                 required
                 value={newCategory.name}
-                onChange={(e) =>
-                  setNewCategory({ ...newCategory, name: e.target.value })
-                }
+                onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
               />
               <TextField
                 label="Category Description"
                 fullWidth
                 required
                 value={newCategory.description}
-                onChange={(e) =>
-                  setNewCategory({ ...newCategory, description: e.target.value })
-                }
+                onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })}
               />
 
               <Button variant="contained" type="submit" sx={{ mt: 1 }}>
@@ -358,18 +347,14 @@ const AdministratorControlPanelPage = () => {
                 fullWidth
                 required
                 value={newForum.name}
-                onChange={(e) =>
-                  setNewForum({ ...newForum, name: e.target.value })
-                }
+                onChange={(e) => setNewForum({ ...newForum, name: e.target.value })}
               />
               <TextField
                 label="Forum Description"
                 fullWidth
                 required
                 value={newForum.description}
-                onChange={(e) =>
-                  setNewForum({ ...newForum, description: e.target.value })
-                }
+                onChange={(e) => setNewForum({ ...newForum, description: e.target.value })}
               />
 
               <FormControl fullWidth margin="normal" required>
@@ -407,9 +392,7 @@ const AdministratorControlPanelPage = () => {
           >
             <Stack spacing={2}>
               <FormControl fullWidth required>
-                <InputLabel id="edit-category-select-label">
-                  Select Category
-                </InputLabel>
+                <InputLabel id="edit-category-select-label">Select Category</InputLabel>
                 <Select
                   labelId="edit-category-select-label"
                   id="edit-category-select"
@@ -430,18 +413,14 @@ const AdministratorControlPanelPage = () => {
                 fullWidth
                 required
                 value={editCategory.name}
-                onChange={(e) =>
-                  setEditCategory({ ...editCategory, name: e.target.value })
-                }
+                onChange={(e) => setEditCategory({ ...editCategory, name: e.target.value })}
               />
               <TextField
                 label="Category Description"
                 fullWidth
                 required
                 value={editCategory.description}
-                onChange={(e) =>
-                  setEditCategory({ ...editCategory, description: e.target.value })
-                }
+                onChange={(e) => setEditCategory({ ...editCategory, description: e.target.value })}
               />
 
               <Button variant="contained" type="submit">
@@ -483,18 +462,14 @@ const AdministratorControlPanelPage = () => {
                 fullWidth
                 required
                 value={editForum.name}
-                onChange={(e) =>
-                  setEditForum({ ...editForum, name: e.target.value })
-                }
+                onChange={(e) => setEditForum({ ...editForum, name: e.target.value })}
               />
               <TextField
                 label="Forum Description"
                 fullWidth
                 required
                 value={editForum.description}
-                onChange={(e) =>
-                  setEditForum({ ...editForum, description: e.target.value })
-                }
+                onChange={(e) => setEditForum({ ...editForum, description: e.target.value })}
               />
 
               <Button variant="contained" type="submit">
@@ -515,9 +490,7 @@ const AdministratorControlPanelPage = () => {
           >
             <Stack spacing={2}>
               <FormControl fullWidth required>
-                <InputLabel id="delete-category-select-label">
-                  Select Category
-                </InputLabel>
+                <InputLabel id="delete-category-select-label">Select Category</InputLabel>
                 <Select
                   labelId="delete-category-select-label"
                   id="delete-category-select"

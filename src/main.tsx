@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Navigate, Outlet } from "react-router";
 import App from "./App";
 import Layout from "./layouts/dashboard";
 import ManageAccountPage from "./pages/ManageAccountPage";
@@ -14,18 +14,33 @@ import EditPostPage from "./pages/EditPostPage";
 import AdministratorControlPanelPage from "./pages/AdministratorControlPanelPage";
 import ModeratorControlPanelPage from "./pages/ModeratorControlPanelPage";
 import SignIn from "./pages/SignIn";
+import { sessionTimeout } from "./utils";
+import { SessionProvider, useSession } from "./SessionProvider";
 
+interface SessionRouteProps {
+  sessionTimeout: (timeStamp: number | undefined) => boolean;
+  element: React.ReactNode;
+}
+
+const SessionRoute: React.FC<SessionRouteProps> = ({ sessionTimeout, element }) => {
+  const { session } = useSession();
+  console.log(`SessionRoute: ${JSON.stringify(session)}`);
+  const tokenExpired = sessionTimeout(session?.sessionTimestamp);
+
+  return tokenExpired ? <Navigate to="/sign-in" replace /> : element;
+};
 const router = createBrowserRouter([
   {
     Component: App,
     children: [
       {
         path: "/",
-        Component: Layout,
+        element: <Layout />,
         children: [
           {
             path: "/",
-            Component: SiteIndexPage,
+            // Component: SiteIndexPage,
+            element: <SiteIndexPage />,
           },
           {
             path: "/register",
@@ -33,31 +48,31 @@ const router = createBrowserRouter([
           },
           {
             path: "/forums",
-            Component: SiteIndexPage,
+            element: <SessionRoute sessionTimeout={sessionTimeout} element={<SiteIndexPage />} />,
           },
           {
             path: "/category/:categoryId/forums/:forumId",
-            Component: ListForumTopics,
+            element: <SessionRoute sessionTimeout={sessionTimeout} element={<ListForumTopics />} />,
           },
           {
             path: "/category/:categoryId/forums/:forumId/topics/:topicId",
-            Component: ViewTopicPage,
+            element: <SessionRoute sessionTimeout={sessionTimeout} element={<ViewTopicPage />} />,
           },
           {
             path: "/category/:categoryId/forums/:forumId/topics/:topicId/posts/:postId",
-            Component: EditPostPage,
+            element: <SessionRoute sessionTimeout={sessionTimeout} element={<EditPostPage />} />,
           },
           {
             path: "/category/:categoryId/forums/:forumId/topics/new",
-            Component: NewTopicsPage,
+            element: <SessionRoute sessionTimeout={sessionTimeout} element={<NewTopicsPage />} />,
           },
           {
             path: "/administratorcontrolpanel",
-            Component: AdministratorControlPanelPage,
+            element: <SessionRoute sessionTimeout={sessionTimeout} element={<AdministratorControlPanelPage />} />,
           },
           {
             path: "/moderatorcontrolpanel",
-            Component: ModeratorControlPanelPage,
+            element: <SessionRoute sessionTimeout={sessionTimeout} element={<ModeratorControlPanelPage />} />,
           },
           {
             path: "/rules",
@@ -65,7 +80,7 @@ const router = createBrowserRouter([
           },
           {
             path: "/manageaccount",
-            Component: ManageAccountPage,
+            element: <SessionRoute sessionTimeout={sessionTimeout} element={<ManageAccountPage />} />,
           },
         ],
       },

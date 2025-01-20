@@ -1,8 +1,7 @@
 "use client";
 import * as React from "react";
-import { Outlet, useNavigate } from "react-router-dom";
-// import { AppProvider } from '@toolpad/core/react-router-dom';
-import { AppProvider } from "@toolpad/core/AppProvider";
+import { Outlet, useNavigate } from "react-router";
+import { ReactRouterAppProvider } from "@toolpad/core/react-router";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import GavelIcon from "@mui/icons-material/Gavel";
 import { AdminPanelSettings, ManageAccounts, SafetyCheck } from "@mui/icons-material";
@@ -32,7 +31,7 @@ function AppContent() {
   }, [signOut, navigate]);
 
   // (Optional) Dynamically add nav items
-  if (session) {
+  if (session?.user) {
     const manageAccount = {
       title: "Manage Account",
       icon: <ManageAccounts />,
@@ -64,7 +63,7 @@ function AppContent() {
   }
 
   return (
-    <AppProvider
+    <ReactRouterAppProvider
       navigation={NAVIGATION}
       branding={BRANDING}
       session={session}
@@ -75,7 +74,7 @@ function AppContent() {
       theme={{ dark: darkTheme, light: lightTheme }}
     >
       <Outlet />
-    </AppProvider>
+    </ReactRouterAppProvider>
   );
 }
 

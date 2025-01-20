@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { Category, Forum } from "../types";
 import {
   Box,
@@ -55,7 +55,7 @@ export default function SiteIndexPage() {
       </Box>
     );
   }
-  
+
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h4" gutterBottom>
